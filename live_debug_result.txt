@@ -1,0 +1,91 @@
+=== BACKEND LOGS NOW === 
+2026-06-16 05:06:22 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:52770 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 05:06:37 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:36468 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 05:06:37 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:44114 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 05:06:52 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:56818 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 05:06:52 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:52674 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 05:07:08 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:50386 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 05:07:08 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:36082 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 05:07:23 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:58974 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 05:07:23 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:56352 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 05:07:38 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:37400 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 05:07:38 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:32782 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 05:07:53 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:42284 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 05:07:53 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:37156 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 05:08:08 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:42336 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 05:08:08 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:55018 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 05:08:23 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:52220 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 05:08:23 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:56986 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 05:08:38 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:36954 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 05:08:38 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:37854 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 05:08:53 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:43538 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 05:08:53 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:37264 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 05:09:08 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:39724 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 05:09:08 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:50962 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 05:09:23 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:45332 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 05:09:23 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:56860 - "GET /health HTTP/1.1" 200 OK
+=== AI SERVICE LOGS NOW === 
+INFO:     Started server process [8]
+INFO:     Waiting for application startup.
+2026-06-16 05:04:02 [info     ] Vanna AI Service starting      model=gpt-4o-mini
+INFO:     Application startup complete.
+INFO:     Started server process [9]
+INFO:     Waiting for application startup.
+2026-06-16 05:04:02 [info     ] Vanna AI Service starting      model=gpt-4o-mini
+INFO:     Application startup complete.
+INFO:     127.0.0.1:35470 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35476 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35736 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53668 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34212 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39350 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37842 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59758 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50778 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47694 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49480 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37202 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60132 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37554 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36710 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46028 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45272 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46172 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40266 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35292 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35112 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53524 - "GET /health HTTP/1.1" 200 OK
+=== ONGC_FINANCE LOCKS/QUERIES === 
+ pid  | state  | wait_event_type | wait_event |                                                   query                                                   
+------+--------+-----------------+------------+-----------------------------------------------------------------------------------------------------------
+ 3696 | active |                 |            | SELECT pid, state, wait_event_type, wait_event, query FROM pg_stat_activity WHERE datname='ongc_finance';
+(1 row)
+
+=== BACKEND CONTAINER PROCESSES === 
+OCI runtime exec failed: exec failed: unable to start container process: exec: "ps": executable file not found in $PATH
+Done 

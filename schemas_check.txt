@@ -1,0 +1,12 @@
+                  id                  |           profile_name           |   allowed_schemas    | allowed_tables 
+--------------------------------------+----------------------------------+----------------------+----------------
+ 10000000-0000-0000-0000-000000000001 | ONGC Finance DB (PostgreSQL)     | []                   | []
+ 10000000-0000-0000-0000-000000000002 | ONGC HR DB (MySQL)               | ["hr", "payroll"]    | []
+ 10000000-0000-0000-0000-000000000003 | ONGC Asset Management (MSSQL)    | []                   | []
+ 10000000-0000-0000-0000-000000000004 | ONGC Operations Oracle           | ["ONGC_OPS"]         | []
+ 10000000-0000-0000-0000-000000000005 | ONGC Procurement DB (PostgreSQL) | []                   | []
+ 10000000-0000-0000-0000-000000000006 | ONGC Safety DB (MySQL)           | ["hse", "incidents"] | []
+ 10000000-0000-0000-0000-000000000007 | Platform DB (Test)               | []                   | []
+ 10000000-0000-0000-0000-000000000008 | ONGC Refinery DB                 | []                   | []
+(8 rows)
+

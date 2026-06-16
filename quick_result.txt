@@ -1,0 +1,15 @@
+=== DB TOKENS ===
+
+ERR: 
+=== FINANCE HASH CHECK ===
+
+ERR: 
+=== CONTAINER STATUS ===
+vanna_ai_service Up 8 minutes (healthy)
+vanna_worker Up 11 minutes (healthy)
+vanna_backend Up 11 minutes (healthy)
+vanna_frontend Up 11 minutes (healthy)
+vanna_nginx Up 11 minutes (healthy)
+vanna_postgres Up 11 minutes (healthy)
+vanna_redis Up 11 minutes (healthy)
+

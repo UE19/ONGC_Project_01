@@ -1,0 +1,34 @@
+ONGC Final Test v7 - 16-06-2026 11:59:45
+URL: http://localhost/api/query | Auth: Bearer <token>
+============================================================
+
+--- 001 FINANCE ---
+Q: show all budget allocations
+OK rows=19 | SQL: 
+
+--- 002 HR ---
+Q: list all employees with grade and base salary
+FAIL: {"detail":"Query execution failed: (psycopg2.errors.UndefinedColumn) column \"employee_id\" does not exist\nLINE 1: SELECT * FROM (SELECT employee_id, grade, base_salary FROM e...\n                              ^\n\n[SQL: SELECT * FROM (SELECT employee_id, grade, base_salary FROM employees) AS _page
+
+--- 003 ASSETS ---
+Q: show all equipment assets
+FAIL: {"detail":"Query execution failed: (psycopg2.errors.UndefinedTable) relation \"equipment\" does not exist\nLINE 1: SELECT * FROM (SELECT * FROM equipment) AS _paged LIMIT 100 ...\n                                     ^\n\n[SQL: SELECT * FROM (SELECT * FROM equipment) AS _paged LIMIT 100 OFFSET 0]\n(
+
+--- 004 OPERATIONS ---
+Q: list all wells where is_active is true
+OK rows=14 | SQL: 
+
+--- 005 PROCUREMENT ---
+Q: list all vendors where is_active is true
+FAIL: {"detail":"Query execution failed: (psycopg2.errors.UndefinedColumn) column \"vendor\" does not exist\nLINE 1: SELECT * FROM (SELECT vendor FROM vendors WHERE is_active = ...\n                              ^\nHINT:  Perhaps you meant to reference the column \"vendors.vendor_id\".\n\n[SQL: SELECT * F
+
+--- 006 SAFETY ---
+Q: show all incidents where is_resolved is false
+OK rows=1 | SQL: 
+
+--- 007 REFINERY ---
+Q: show all assets
+OK rows=5 | SQL: 
+
+============================================================
+DONE - 16-06-2026 12:00:29

@@ -1,0 +1,11 @@
+           name            | status |       left       
+---------------------------+--------+------------------
+ Assets Test Token v2      | active | 2f34e912264eb340
+ Finance Test Token v2     | active | a939a27f0307962f
+ HR Test Token v2          | active | e11e56b143b50076
+ Operations Test Token v2  | active | 34da2ac03daeb05c
+ Procurement Test Token v2 | active | 993ea828280cf0ac
+ Refinery Test Token v2    | active | de590923012be883
+ Safety Test Token v2      | active | 03028ff128e6f0ae
+(7 rows)
+

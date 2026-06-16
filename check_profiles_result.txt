@@ -1,0 +1,67 @@
+=== CONNECTION PROFILES === 
+ERROR:  column "name" does not exist
+LINE 1: SELECT id, name, db_type, db_host, db_port, db_name, db_user...
+                   ^
+=== BACKEND LOGS (last 40) === 
+2026-06-16 04:55:19 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:41634 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 04:55:20 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:57742 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 04:55:34 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:48400 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 04:55:35 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:47658 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 04:55:49 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:37994 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 04:55:50 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:60454 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 04:56:04 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:52884 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 04:56:05 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:55446 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 04:56:19 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:47570 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 04:56:20 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:33062 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 04:56:35 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:44582 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 04:56:35 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:38668 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 04:56:50 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:39094 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 04:56:50 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:42224 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 04:57:05 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:52032 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 04:57:05 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:39856 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 04:57:20 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:35942 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 04:57:20 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:46436 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 04:57:35 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:33030 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 04:57:35 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:50688 - "GET /health HTTP/1.0" 200 OK
+=== AI SERVICE LOGS (last 20) === 
+INFO:     127.0.0.1:50260 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46848 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49446 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49506 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58966 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34144 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42292 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48134 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35080 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53120 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44570 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34174 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59804 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53988 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51960 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48208 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36840 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58908 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46270 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38768 - "GET /health HTTP/1.1" 200 OK
+Done 

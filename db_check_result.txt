@@ -1,0 +1,90 @@
+=== LIST ALL POSTGRES DATABASES === 
+                                                        List of databases
+       Name       |    Owner    | Encoding |  Collate   |   Ctype    | ICU Locale | Locale Provider |      Access privileges      
+------------------+-------------+----------+------------+------------+------------+-----------------+-----------------------------
+ ongc_assets      | vanna_admin | UTF8     | en_US.utf8 | en_US.utf8 |            | libc            | 
+ ongc_finance     | vanna_admin | UTF8     | en_US.utf8 | en_US.utf8 |            | libc            | 
+ ongc_hr          | vanna_admin | UTF8     | en_US.utf8 | en_US.utf8 |            | libc            | 
+ ongc_operations  | vanna_admin | UTF8     | en_US.utf8 | en_US.utf8 |            | libc            | 
+ ongc_procurement | vanna_admin | UTF8     | en_US.utf8 | en_US.utf8 |            | libc            | 
+ ongc_refinery    | vanna_admin | UTF8     | en_US.utf8 | en_US.utf8 |            | libc            | 
+ ongc_safety      | vanna_admin | UTF8     | en_US.utf8 | en_US.utf8 |            | libc            | 
+ postgres         | vanna_admin | UTF8     | en_US.utf8 | en_US.utf8 |            | libc            | 
+ template0        | vanna_admin | UTF8     | en_US.utf8 | en_US.utf8 |            | libc            | =c/vanna_admin             +
+                  |             |          |            |            |            |                 | vanna_admin=CTc/vanna_admin
+ template1        | vanna_admin | UTF8     | en_US.utf8 | en_US.utf8 |            | libc            | =c/vanna_admin             +
+                  |             |          |            |            |            |                 | vanna_admin=CTc/vanna_admin
+ vanna_platform   | vanna_admin | UTF8     | en_US.utf8 | en_US.utf8 |            | libc            | 
+(11 rows)
+
+=== CHECK TABLES IN EACH DB === 
+                 List of relations
+ Schema |        Name        | Type  |    Owner    
+--------+--------------------+-------+-------------
+ public | budget_allocations | table | vanna_admin
+ public | gl_entries         | table | vanna_admin
+ public | procurement_orders | table | vanna_admin
+ public | purchase_orders    | table | vanna_admin
+(4 rows)
+
+               List of relations
+ Schema |      Name       | Type  |    Owner    
+--------+-----------------+-------+-------------
+ public | attendance      | table | vanna_admin
+ public | departments     | table | vanna_admin
+ public | employees       | table | vanna_admin
+ public | payroll_records | table | vanna_admin
+(4 rows)
+
+                  List of relations
+ Schema |         Name          | Type  |    Owner    
+--------+-----------------------+-------+-------------
+ public | asset_conditions      | table | vanna_admin
+ public | equipment_assets      | table | vanna_admin
+ public | maintenance_schedules | table | vanna_admin
+ public | spare_parts           | table | vanna_admin
+(4 rows)
+
+                List of relations
+ Schema |       Name       | Type  |    Owner    
+--------+------------------+-------+-------------
+ public | drilling_records | table | vanna_admin
+ public | production_data  | table | vanna_admin
+ public | reservoir_data   | table | vanna_admin
+ public | wells            | table | vanna_admin
+(4 rows)
+
+                List of relations
+ Schema |       Name        | Type  |    Owner    
+--------+-------------------+-------+-------------
+ public | contracts         | table | vanna_admin
+ public | invoices          | table | vanna_admin
+ public | purchase_requests | table | vanna_admin
+ public | vendors           | table | vanna_admin
+(4 rows)
+
+                 List of relations
+ Schema |        Name        | Type  |    Owner    
+--------+--------------------+-------+-------------
+ public | incidents          | table | vanna_admin
+ public | risk_assessments   | table | vanna_admin
+ public | safety_inspections | table | vanna_admin
+ public | training_records   | table | vanna_admin
+(4 rows)
+
+                     List of relations
+ Schema |            Name            | Type  |    Owner    
+--------+----------------------------+-------+-------------
+ public | assetintegritylogs         | table | vanna_admin
+ public | assets                     | table | vanna_admin
+ public | crudeassays                | table | vanna_admin
+ public | pipelinemetrics            | table | vanna_admin
+ public | pipelines                  | table | vanna_admin
+ public | productionlogs             | table | vanna_admin
+ public | refineryunits              | table | vanna_admin
+ public | refineryutilizationmetrics | table | vanna_admin
+ public | supplydemanddynamics       | table | vanna_admin
+ public | weeklyinventoryrecords     | table | vanna_admin
+(10 rows)
+
+Done 
