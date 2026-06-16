@@ -1,0 +1,13 @@
+UPDATE 7
+                  id                  |           profile_name           |   host   | port |  database_name   
+--------------------------------------+----------------------------------+----------+------+------------------
+ 10000000-0000-0000-0000-000000000001 | ONGC Finance DB (PostgreSQL)     | postgres | 5432 | ongc_finance
+ 10000000-0000-0000-0000-000000000002 | ONGC HR DB (MySQL)               | postgres | 5432 | ongc_hr
+ 10000000-0000-0000-0000-000000000003 | ONGC Asset Management (MSSQL)    | postgres | 5432 | ongc_assets
+ 10000000-0000-0000-0000-000000000004 | ONGC Operations Oracle           | postgres | 5432 | ongc_operations
+ 10000000-0000-0000-0000-000000000005 | ONGC Procurement DB (PostgreSQL) | postgres | 5432 | ongc_procurement
+ 10000000-0000-0000-0000-000000000006 | ONGC Safety DB (MySQL)           | postgres | 5432 | ongc_safety
+ 10000000-0000-0000-0000-000000000007 | Platform DB (Test)               | postgres | 5432 | vanna_platform
+ 10000000-0000-0000-0000-000000000008 | ONGC Refinery DB                 | postgres | 5432 | ongc_refinery
+(8 rows)
+
