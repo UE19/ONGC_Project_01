@@ -1,0 +1,38 @@
+=========================================
+STEP 1: Deploy latest vanna_engine.py
+=========================================
+
+STEP 2: Verify new code in container
+5
+
+106:            if not candidates and used_name.lower().endswith('s'):
+110:            # Case 3: valid table ends with used_name (allocations → budget_allocations)
+112:                candidates = [v for v in valid_tables if v.lower().endswith(used_name.lower())]
+114:            # Case 4: used_name ends with a valid table name (safety_incidents → incidents)
+116:                candidates = [v for v in valid_tables if used_name.lower().endswith(v.lower())]
+
+
+STEP 3: Restart vanna_ai_service
+vanna_ai_service
+
+Waiting 20 seconds for startup...
+vanna_ai_service Up 21 seconds (healthy)
+vanna_worker Up 3 minutes (healthy)
+vanna_backend Up 3 minutes (healthy)
+vanna_frontend Up 3 minutes (healthy)
+vanna_nginx Up 3 minutes (healthy)
+vanna_postgres Up 3 minutes (healthy)
+vanna_redis Up 3 minutes (healthy)
+
+
+=========================================
+STEP 4: Run test for each profile
+=========================================
+
+--- [001] FINANCE: show budget allocations by department ---
+{"detail":"Invalid API token"}
+
+--- [002] HR: list employees with their grade and base salary ---
+{"query_id":"1df1aa57-be3a-4a57-bb7b-ae329a2cbebb","question":"list employees with their grade and base salary","generated_sql":"SELECT grade, base_salary FROM employees","sql_explanation":null,"summary":"The query returned a list of 30 employees, each with their corresponding grade and base salary.","data":[{"grade":"E8","base_salary":285000.0},{"grade":"E8","base_salary":288000.0},{"grade":"E8","base_salary":275000.0},{"grade":"E8","base_salary":278000.0},{"grade":"E8","base_salary":282000.0},{"grade":"E8","base_salary":292000.0},{"grade":"E7","base_salary":225000.0},{"grade":"E6","base_salary":185000.0},{"grade":"E5","base_salary":145000.0},{"grade":"E5","base_salary":138000.0},{"grade":"E4","base_salary":112000.0},{"grade":"E3","base_salary":88000.0},{"grade":"E3","base_salary":90000.0},{"grade":"E4","base_salary":105000.0},{"grade":"E4","base_salary":108000.0},{"grade":"E2","base_salary":62000.0},{"grade":"E1","base_salary":52000.0},{"grade":"E2","base_salary":65000.0},{"grade":"E2","base_salary":58000.0},{"grade":"E2","base_salary":60000.0},{"grade":"E6","base_salary":182000.0},{"grade":"E5","base_salary":148000.0},{"grade":"E5","base_salary":155000.0},{"grade":"E5","base_salary":142000.0},{"grade":"E4","base_salary":118000.0},{"grade":"E5","base_salary":142000.0},{"grade":"E4","base_salary":115000.0},{"grade":"E5","base_salary":152000.0},{"grade":"E3","base_salary":82000.0},{"grade":"E3","base_salary":78000.0}],"columns":["grade","base_salary"],"row_count":30,"total_rows":30,"page":1,"page_size":100,"execution_time_ms":390.77,"db_type":"postgresql"}
+
+--- [003] ASSETS: show all equipment assets ---

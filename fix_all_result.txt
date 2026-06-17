@@ -1,0 +1,38 @@
+=== FIX FINANCE TOKEN === 
+UPDATE 1
+UPDATE 1
+=== FIX REFINERY TOKEN === 
+UPDATE 1
+UPDATE 1
+=== VERIFY TOKENS === 
+           name            | status |       left       
+---------------------------+--------+------------------
+ Assets Test Token v2      | active | 2f34e912264eb340
+ Finance Test Token v2     | active | a939a27f0307962f
+ HR Test Token v2          | active | e11e56b143b50076
+ Operations Test Token v2  | active | 34da2ac03daeb05c
+ Procurement Test Token v2 | active | 993ea828280cf0ac
+ Refinery Test Token v2    | active | de590923012be883
+ Safety Test Token v2      | active | 03028ff128e6f0ae
+(7 rows)
+
+=== CHECK VANNA ENGINE _fix_sql_columns === 
+142:        all_cols: set = set()
+147:                    all_cols.add(name.lower())
+152:        # status = 'active' → is_active = TRUE   (when is_active in schema)
+153:        if "is_active" in all_cols:
+154:            result = re.sub(r"\bstatus\s*=\s*'active'",   "is_active = TRUE",  result, flags=re.IGNORECASE)
+155:            result = re.sub(r"\bstatus\s*=\s*'inactive'", "is_active = FALSE", result, flags=re.IGNORECASE)
+158:        if "is_resolved" in all_cols:
+164:        if "full_name" in all_cols and "employee_name" not in all_cols:
+168:        if "base_salary" in all_cols and "salary" not in all_cols:
+172:        if "full_name" in all_cols and "name" not in all_cols:
+177:        if "allocated_amount" in all_cols and "budget" not in all_cols:
+181:        # is_active → already correct, but Ollama sometimes writes "active"
+182:        if "is_active" in all_cols:
+183:            # active = TRUE/FALSE → is_active = TRUE/FALSE
+184:            result = re.sub(r'\bactive\s*=\s*TRUE\b',  'is_active = TRUE',  result, flags=re.IGNORECASE)
+185:            result = re.sub(r'\bactive\s*=\s*FALSE\b', 'is_active = FALSE', result, flags=re.IGNORECASE)
+186:            # WHERE active → WHERE is_active (in SELECT or WHERE)
+187:            result = re.sub(r'\bWHERE\s+active\b', 'WHERE is_active', result, flags=re.IGNORECASE)
+Done 

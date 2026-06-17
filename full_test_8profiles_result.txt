@@ -1,0 +1,38 @@
+ONGC Full Test - All 8 Profiles - 16-06-2026 12:58:37
+============================================================
+
+--- 001 FINANCE (PostgreSQL) ---
+Q: list all records from budget_allocations table
+OK rows=19
+
+--- 002 HR (PostgreSQL) ---
+Q: list all records from employees table
+OK rows=30
+
+--- 003 ASSETS (PostgreSQL) ---
+Q: list all records from equipment_assets table
+OK rows=15
+
+--- 004 OPERATIONS (PostgreSQL) ---
+Q: list all records from wells table
+OK rows=15
+
+--- 005 PROCUREMENT (PostgreSQL) ---
+Q: list all records from vendors table
+OK rows=15
+
+--- 006 SAFETY (PostgreSQL) ---
+Q: list all records from incidents table
+OK rows=10
+
+--- 007 REFINERY (PostgreSQL) ---
+Q: list all records from refinery_assets table
+OK rows=5
+
+--- 008 MONGODB (Field Operations) ---
+Q: list all records from sensor_readings collection
+OK rows=15
+
+============================================================
+FINAL SCORE: 8/8 PASSED | 0 FAILED
+DONE - 16-06-2026 12:59:10

@@ -1,0 +1,47 @@
+=== V2 TOKEN DETAILS === 
+           name            | status  |      hash16      |              profile_id              
+---------------------------+---------+------------------+--------------------------------------
+ Assets Test Token v2      | active  | 2f34e912264eb340 | 10000000-0000-0000-0000-000000000003
+ Finance Test Token v2     | active  | 76c9674eb6846513 | 10000000-0000-0000-0000-000000000001
+ Finance Test Token v2     | revoked | a939a27f0307962f | 10000000-0000-0000-0000-000000000001
+ HR Test Token v2          | active  | e11e56b143b50076 | 10000000-0000-0000-0000-000000000002
+ Operations Test Token v2  | active  | 34da2ac03daeb05c | 10000000-0000-0000-0000-000000000004
+ Procurement Test Token v2 | active  | 993ea828280cf0ac | 10000000-0000-0000-0000-000000000005
+ Refinery Test Token v2    | active  | 7d64545eb23a94d2 | 10000000-0000-0000-0000-000000000008
+ Refinery Test Token v2    | revoked | de590923012be883 | 10000000-0000-0000-0000-000000000008
+ Refinery Test Token v2    | revoked | fa245115c4fdaf1e | 10000000-0000-0000-0000-000000000008
+ Refinery Test Token v2    | revoked | e5cf0d0c271e5659 | 10000000-0000-0000-0000-000000000008
+ Safety Test Token v2      | active  | 03028ff128e6f0ae | 10000000-0000-0000-0000-000000000006
+(11 rows)
+
+=== SCHEMA_METADATA for profile 004 (Operations) === 
+    table_name    |                                                                                                                                                                                                                                         column_definitions                                                                                                                                                                                                                                          
+------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ drilling_records | {"columns": [{"name": "drill_id", "type": "INT"}, {"name": "well_id", "type": "INT"}, {"name": "rig_name", "type": "VARCHAR"}, {"name": "spud_date", "type": "DATE"}, {"name": "td_date", "type": "DATE"}, {"name": "total_depth", "type": "INT"}, {"name": "formation", "type": "VARCHAR"}, {"name": "cost_crore", "type": "DECIMAL"}, {"name": "status", "type": "VARCHAR"}]}
+ production_data  | {"columns": [{"name": "prod_id", "type": "INT"}, {"name": "well_id", "type": "INT"}, {"name": "production_date", "type": "DATE"}, {"name": "oil_volume_bbl", "type": "DECIMAL"}, {"name": "gas_volume_mmscfd", "type": "DECIMAL"}, {"name": "water_volume_bbl", "type": "DECIMAL"}, {"name": "gor", "type": "DECIMAL"}, {"name": "watercut_percent", "type": "DECIMAL"}, {"name": "downtime_hours", "type": "DECIMAL"}]}
+ reservoir_data   | {"columns": [{"name": "reservoir_id", "type": "INT"}, {"name": "reservoir_name", "type": "VARCHAR"}, {"name": "location", "type": "VARCHAR"}, {"name": "discovery_year", "type": "INT"}, {"name": "oil_reserves_mmt", "type": "DECIMAL"}, {"name": "gas_reserves_bcm", "type": "DECIMAL"}, {"name": "recovery_factor", "type": "DECIMAL"}, {"name": "current_production_mmt", "type": "DECIMAL"}, {"name": "reservoir_pressure_bar", "type": "DECIMAL"}, {"name": "is_active", "type": "BOOLEAN"}]}
+ wells            | {"columns": [{"name": "well_id", "type": "INT"}, {"name": "well_name", "type": "VARCHAR"}, {"name": "well_type", "type": "VARCHAR"}, {"name": "location", "type": "VARCHAR"}, {"name": "basin", "type": "VARCHAR"}, {"name": "spud_date", "type": "DATE"}, {"name": "completion_date", "type": "DATE"}, {"name": "depth_meters", "type": "INT"}, {"name": "is_active", "type": "BOOLEAN"}, {"name": "operator", "type": "VARCHAR"}]}
+(4 rows)
+
+=== SCHEMA_METADATA for profile 006 (Safety) === 
+     table_name     |                                                                                                                                                                                                                                                                 column_definitions                                                                                                                                                                                                                                                                  
+--------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ incidents          | {"columns": [{"name": "incident_id", "type": "INT"}, {"name": "incident_date", "type": "DATE"}, {"name": "incident_type", "type": "VARCHAR"}, {"name": "location", "type": "VARCHAR"}, {"name": "severity", "type": "VARCHAR"}, {"name": "description", "type": "TEXT"}, {"name": "reported_by", "type": "VARCHAR"}, {"name": "injured_count", "type": "INT"}, {"name": "is_resolved", "type": "BOOLEAN"}, {"name": "resolved_date", "type": "DATE"}, {"name": "root_cause", "type": "VARCHAR"}, {"name": "corrective_action", "type": "VARCHAR"}]}
+ risk_assessments   | {"columns": [{"name": "assessment_id", "type": "INT"}, {"name": "assessment_date", "type": "DATE"}, {"name": "location", "type": "VARCHAR"}, {"name": "hazard_type", "type": "VARCHAR"}, {"name": "risk_level", "type": "VARCHAR"}, {"name": "likelihood", "type": "INT"}, {"name": "consequence", "type": "INT"}, {"name": "risk_score", "type": "INT"}, {"name": "control_measures", "type": "TEXT"}, {"name": "responsible_person", "type": "VARCHAR"}, {"name": "review_date", "type": "DATE"}]}
+ safety_inspections | {"columns": [{"name": "inspection_id", "type": "INT"}, {"name": "inspection_date", "type": "DATE"}, {"name": "location", "type": "VARCHAR"}, {"name": "inspector_name", "type": "VARCHAR"}, {"name": "inspection_type", "type": "VARCHAR"}, {"name": "findings", "type": "TEXT"}, {"name": "compliance_score", "type": "INT"}, {"name": "status", "type": "VARCHAR"}, {"name": "next_inspection", "type": "DATE"}]}
+ training_records   | {"columns": [{"name": "training_id", "type": "INT"}, {"name": "emp_code", "type": "VARCHAR"}, {"name": "emp_name", "type": "VARCHAR"}, {"name": "training_type", "type": "VARCHAR"}, {"name": "training_date", "type": "DATE"}, {"name": "completion_date", "type": "DATE"}, {"name": "score", "type": "INT"}, {"name": "is_certified", "type": "BOOLEAN"}, {"name": "expiry_date", "type": "DATE"}]}
+(4 rows)
+
+=== ACTIVE FINANCE V2 TOKEN HASH === 
+         name          | status |                            token_hash                            
+-----------------------+--------+------------------------------------------------------------------
+ Finance Test Token v2 | active | 76c9674eb684651391feb2e3174d659928a0ab6d6ad7be8a9c5a2cb277d5a07f
+(1 row)
+
+=== ACTIVE REFINERY V2 TOKEN HASH === 
+          name          | status |                            token_hash                            
+------------------------+--------+------------------------------------------------------------------
+ Refinery Test Token v2 | active | 7d64545eb23a94d24d7a4bd94efde2b440c1a7a6dd5be73e475c5854080b9f9f
+(1 row)
+
+Done 

@@ -1,0 +1,156 @@
+=== CONNECTION_PROFILES TABLE COLUMNS === 
+                             Table "public.connection_profiles"
+       Column       |           Type           | Collation | Nullable |       Default       
+--------------------+--------------------------+-----------+----------+---------------------
+ id                 | uuid                     |           | not null | uuid_generate_v4()
+ owner_id           | uuid                     |           | not null | 
+ profile_name       | character varying(255)   |           | not null | 
+ description        | text                     |           |          | 
+ db_type            | database_type            |           | not null | 
+ host               | character varying(255)   |           | not null | 
+ port               | integer                  |           | not null | 
+ database_name      | character varying(255)   |           | not null | 
+ username           | character varying(255)   |           | not null | 
+ encrypted_password | text                     |           | not null | 
+ ssl_mode           | ssl_mode                 |           | not null | 'disable'::ssl_mode
+ ssl_ca_cert        | text                     |           |          | 
+ ssl_client_cert    | text                     |           |          | 
+ ssl_client_key     | text                     |           |          | 
+ allowed_schemas    | jsonb                    |           | not null | '[]'::jsonb
+ allowed_tables     | jsonb                    |           | not null | '[]'::jsonb
+ read_only          | boolean                  |           | not null | true
+ is_active          | boolean                  |           | not null | true
+ last_tested_at     | timestamp with time zone |           |          | 
+ last_test_success  | boolean                  |           |          | 
+ schema_ingested_at | timestamp with time zone |           |          | 
+ created_at         | timestamp with time zone |           | not null | now()
+ updated_at         | timestamp with time zone |           | not null | now()
+Indexes:
+    "connection_profiles_pkey" PRIMARY KEY, btree (id)
+    "idx_profiles_owner" btree (owner_id)
+    "idx_profiles_type" btree (db_type)
+Foreign-key constraints:
+    "connection_profiles_owner_id_fkey" FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE
+Referenced by:
+    TABLE "api_tokens" CONSTRAINT "api_tokens_profile_id_fkey" FOREIGN KEY (profile_id) REFERENCES connection_profiles(id) ON DELETE CASCADE
+    TABLE "business_glossary" CONSTRAINT "business_glossary_profile_id_fkey" FOREIGN KEY (profile_id) REFERENCES connection_profiles(id) ON DELETE CASCADE
+    TABLE "query_history" CONSTRAINT "query_history_profile_id_fkey" FOREIGN KEY (profile_id) REFERENCES connection_profiles(id) ON DELETE SET NULL
+    TABLE "schema_metadata" CONSTRAINT "schema_metadata_profile_id_fkey" FOREIGN KEY (profile_id) REFERENCES connection_profiles(id) ON DELETE CASCADE
+Triggers:
+    trg_profiles_updated BEFORE UPDATE ON connection_profiles FOR EACH ROW EXECUTE FUNCTION update_updated_at()
+
+=== ALL PROFILE DATA === 
+                  id                  |               owner_id               |           profile_name           |                                                   description                                                   |  db_type   |   host   | port |  database_name   |  username   |                                          encrypted_password                                          | ssl_mode | ssl_ca_cert | ssl_client_cert | ssl_client_key | allowed_schemas | allowed_tables | read_only | is_active |        last_tested_at         | last_test_success |      schema_ingested_at       |          created_at           |          updated_at           
+--------------------------------------+--------------------------------------+----------------------------------+-----------------------------------------------------------------------------------------------------------------+------------+----------+------+------------------+-------------+------------------------------------------------------------------------------------------------------+----------+-------------+-----------------+----------------+-----------------+----------------+-----------+-----------+-------------------------------+-------------------+-------------------------------+-------------------------------+-------------------------------
+ 10000000-0000-0000-0000-000000000001 | a2f5433e-8a98-444a-83f4-7a79f00a8efc | ONGC Finance DB (PostgreSQL)     | Finance dept PostgreSQL — procurement, budgets, GL                                                              | postgresql | postgres | 5432 | ongc_finance     | vanna_admin | gAAAAABqMAXwRwe1Pw4HT7eJYDrLeW8gqtfuogf4zFHdxHgC-E465uUTJ9wZR1egee0lIqZMvPhsRcw87Q0Ydr0dHusI7NO2Rw== | disable  |             |                 |                | []              | []             | t         | t         | 2026-06-15 09:37:02.756536+00 | t                 |                               | 2026-06-15 09:37:02.756536+00 | 2026-06-15 15:38:44.035112+00
+ 10000000-0000-0000-0000-000000000002 | a2f5433e-8a98-444a-83f4-7a79f00a8efc | ONGC HR DB (MySQL)               | Human Resources MySQL — employees, payroll, attendance                                                          | postgresql | postgres | 5432 | ongc_hr          | vanna_admin | gAAAAABqMAXwRwe1Pw4HT7eJYDrLeW8gqtfuogf4zFHdxHgC-E465uUTJ9wZR1egee0lIqZMvPhsRcw87Q0Ydr0dHusI7NO2Rw== | disable  |             |                 |                | []              | []             | t         | t         | 2026-06-15 09:37:02.77493+00  | t                 |                               | 2026-06-15 09:37:02.77493+00  | 2026-06-15 15:58:55.672723+00
+ 10000000-0000-0000-0000-000000000003 | a2f5433e-8a98-444a-83f4-7a79f00a8efc | ONGC Asset Management (MSSQL)    | Asset tracking MSSQL — equipment, maintenance                                                                   | postgresql | postgres | 5432 | ongc_assets      | vanna_admin | gAAAAABqMAXwRwe1Pw4HT7eJYDrLeW8gqtfuogf4zFHdxHgC-E465uUTJ9wZR1egee0lIqZMvPhsRcw87Q0Ydr0dHusI7NO2Rw== | disable  |             |                 |                | []              | []             | t         | t         | 2026-06-15 09:37:02.777787+00 | t                 |                               | 2026-06-15 09:37:02.777787+00 | 2026-06-15 15:38:44.035112+00
+ 10000000-0000-0000-0000-000000000004 | d9adf3e8-8683-4f42-9985-46d2626506b7 | ONGC Operations Oracle           | E&P Oracle DB — wells, production, drilling                                                                     | postgresql | postgres | 5432 | ongc_operations  | vanna_admin | gAAAAABqMAXwRwe1Pw4HT7eJYDrLeW8gqtfuogf4zFHdxHgC-E465uUTJ9wZR1egee0lIqZMvPhsRcw87Q0Ydr0dHusI7NO2Rw== | disable  |             |                 |                | []              | []             | t         | t         | 2026-06-15 09:37:02.779811+00 | t                 |                               | 2026-06-15 09:37:02.779811+00 | 2026-06-15 15:58:55.672723+00
+ 10000000-0000-0000-0000-000000000005 | a2f5433e-8a98-444a-83f4-7a79f00a8efc | ONGC Procurement DB (PostgreSQL) | Procurement & vendor management PostgreSQL                                                                      | postgresql | postgres | 5432 | ongc_procurement | vanna_admin | gAAAAABqMAXwRwe1Pw4HT7eJYDrLeW8gqtfuogf4zFHdxHgC-E465uUTJ9wZR1egee0lIqZMvPhsRcw87Q0Ydr0dHusI7NO2Rw== | disable  |             |                 |                | []              | []             | t         | t         | 2026-06-15 09:39:46.828507+00 | t                 |                               | 2026-06-15 09:39:46.828507+00 | 2026-06-15 15:38:44.035112+00
+ 10000000-0000-0000-0000-000000000006 | d9adf3e8-8683-4f42-9985-46d2626506b7 | ONGC Safety DB (MySQL)           | HSE — Health Safety Environment MySQL database                                                                  | postgresql | postgres | 5432 | ongc_safety      | vanna_admin | gAAAAABqMAXwRwe1Pw4HT7eJYDrLeW8gqtfuogf4zFHdxHgC-E465uUTJ9wZR1egee0lIqZMvPhsRcw87Q0Ydr0dHusI7NO2Rw== | disable  |             |                 |                | []              | []             | t         | t         | 2026-06-15 09:39:46.832538+00 | t                 |                               | 2026-06-15 09:39:46.832538+00 | 2026-06-15 15:58:55.672723+00
+ 10000000-0000-0000-0000-000000000007 | a2f5433e-8a98-444a-83f4-7a79f00a8efc | Platform DB (Test)               | Vanna platform PostgreSQL ??? use this to test NL queries (users, tokens, query history)                        | postgresql | postgres | 5432 | vanna_platform   | vanna_admin | gAAAAABqMAXwRwe1Pw4HT7eJYDrLeW8gqtfuogf4zFHdxHgC-E465uUTJ9wZR1egee0lIqZMvPhsRcw87Q0Ydr0dHusI7NO2Rw== | disable  |             |                 |                | []              | []             | t         | t         | 2026-06-15 09:50:46.493486+00 | t                 |                               | 2026-06-15 09:50:46.493486+00 | 2026-06-15 15:38:44.035112+00
+ 10000000-0000-0000-0000-000000000008 | a2f5433e-8a98-444a-83f4-7a79f00a8efc | ONGC Refinery DB                 | ONGC Refinery & Asset Production data — 10 tables: Assets, RefineryUnits, ProductionLogs, PipelineMetrics, etc. | postgresql | postgres | 5432 | ongc_refinery    | vanna_admin | gAAAAABqMAXwRwe1Pw4HT7eJYDrLeW8gqtfuogf4zFHdxHgC-E465uUTJ9wZR1egee0lIqZMvPhsRcw87Q0Ydr0dHusI7NO2Rw== | disable  |             |                 |                | []              | []             | t         | t         | 2026-06-15 14:12:04.88548+00  | t                 | 2026-06-15 14:39:51.558543+00 | 2026-06-15 14:12:04.88548+00  | 2026-06-15 14:39:51.517521+00
+(8 rows)
+
+=== BACKEND LOGS (last 100) === 
+2026-06-16 04:53:19 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:41844 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 04:53:19 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:58454 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 04:53:34 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:55466 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 04:53:34 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:47808 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 04:53:49 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:37368 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 04:53:49 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:48208 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 04:54:04 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:58224 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 04:54:04 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:47072 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 04:54:19 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:58492 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 04:54:19 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:42092 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 04:54:34 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:55986 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 04:54:34 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:44708 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 04:54:49 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:54422 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 04:54:49 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:56976 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 04:55:04 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:60006 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 04:55:04 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:54592 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 04:55:19 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:41634 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 04:55:20 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:57742 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 04:55:34 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:48400 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 04:55:35 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:47658 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 04:55:49 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:37994 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 04:55:50 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:60454 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 04:56:04 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:52884 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 04:56:05 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:55446 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 04:56:19 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:47570 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 04:56:20 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:33062 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 04:56:35 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:44582 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 04:56:35 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:38668 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 04:56:50 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:39094 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 04:56:50 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:42224 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 04:57:05 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:52032 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 04:57:05 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:39856 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 04:57:20 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:35942 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 04:57:20 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:46436 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 04:57:35 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:33030 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 04:57:35 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:50688 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 04:57:50 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:44580 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 04:57:50 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:56090 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 04:58:05 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:42424 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 04:58:05 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:39934 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 04:58:20 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:58604 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 04:58:20 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:47804 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 04:58:35 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:36610 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 04:58:35 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:34422 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 04:58:50 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:37806 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 04:58:50 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:35662 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 04:59:05 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:56680 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 04:59:05 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:60830 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 04:59:20 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:42092 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 04:59:20 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:42380 - "GET /health HTTP/1.0" 200 OK
+Done 

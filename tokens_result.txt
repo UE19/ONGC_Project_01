@@ -1,0 +1,87 @@
+=== API_TOKENS COLUMNS === 
+                                    Table "public.api_tokens"
+        Column         |           Type           | Collation | Nullable |        Default         
+-----------------------+--------------------------+-----------+----------+------------------------
+ id                    | uuid                     |           | not null | uuid_generate_v4()
+ owner_id              | uuid                     |           | not null | 
+ profile_id            | uuid                     |           | not null | 
+ name                  | character varying(255)   |           | not null | 
+ description           | text                     |           |          | 
+ token_hash            | character(64)            |           | not null | 
+ permissions           | jsonb                    |           | not null | '["query"]'::jsonb
+ allowed_schemas       | jsonb                    |           | not null | '[]'::jsonb
+ allowed_tables        | jsonb                    |           | not null | '[]'::jsonb
+ status                | token_status             |           | not null | 'active'::token_status
+ expires_at            | timestamp with time zone |           |          | 
+ revoked_at            | timestamp with time zone |           |          | 
+ rate_limit_per_minute | integer                  |           | not null | 60
+ total_requests        | bigint                   |           | not null | 0
+ last_used_at          | timestamp with time zone |           |          | 
+ last_used_ip          | character varying(45)    |           |          | 
+ created_at            | timestamp with time zone |           | not null | now()
+ updated_at            | timestamp with time zone |           | not null | now()
+Indexes:
+    "api_tokens_pkey" PRIMARY KEY, btree (id)
+    "api_tokens_token_hash_key" UNIQUE CONSTRAINT, btree (token_hash)
+    "idx_tokens_hash" btree (token_hash)
+    "idx_tokens_owner" btree (owner_id)
+    "idx_tokens_profile" btree (profile_id)
+    "idx_tokens_status" btree (status)
+Foreign-key constraints:
+    "api_tokens_owner_id_fkey" FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE
+    "api_tokens_profile_id_fkey" FOREIGN KEY (profile_id) REFERENCES connection_profiles(id) ON DELETE CASCADE
+Referenced by:
+    TABLE "query_history" CONSTRAINT "query_history_token_id_fkey" FOREIGN KEY (token_id) REFERENCES api_tokens(id) ON DELETE SET NULL
+Triggers:
+    trg_tokens_updated BEFORE UPDATE ON api_tokens FOR EACH ROW EXECUTE FUNCTION update_updated_at()
+
+=== CONNECTION_PROFILES COLUMNS === 
+                             Table "public.connection_profiles"
+       Column       |           Type           | Collation | Nullable |       Default       
+--------------------+--------------------------+-----------+----------+---------------------
+ id                 | uuid                     |           | not null | uuid_generate_v4()
+ owner_id           | uuid                     |           | not null | 
+ profile_name       | character varying(255)   |           | not null | 
+ description        | text                     |           |          | 
+ db_type            | database_type            |           | not null | 
+ host               | character varying(255)   |           | not null | 
+ port               | integer                  |           | not null | 
+ database_name      | character varying(255)   |           | not null | 
+ username           | character varying(255)   |           | not null | 
+ encrypted_password | text                     |           | not null | 
+ ssl_mode           | ssl_mode                 |           | not null | 'disable'::ssl_mode
+ ssl_ca_cert        | text                     |           |          | 
+ ssl_client_cert    | text                     |           |          | 
+ ssl_client_key     | text                     |           |          | 
+ allowed_schemas    | jsonb                    |           | not null | '[]'::jsonb
+ allowed_tables     | jsonb                    |           | not null | '[]'::jsonb
+ read_only          | boolean                  |           | not null | true
+ is_active          | boolean                  |           | not null | true
+ last_tested_at     | timestamp with time zone |           |          | 
+ last_test_success  | boolean                  |           |          | 
+ schema_ingested_at | timestamp with time zone |           |          | 
+ created_at         | timestamp with time zone |           | not null | now()
+ updated_at         | timestamp with time zone |           | not null | now()
+Indexes:
+    "connection_profiles_pkey" PRIMARY KEY, btree (id)
+    "idx_profiles_owner" btree (owner_id)
+    "idx_profiles_type" btree (db_type)
+Foreign-key constraints:
+    "connection_profiles_owner_id_fkey" FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE
+Referenced by:
+    TABLE "api_tokens" CONSTRAINT "api_tokens_profile_id_fkey" FOREIGN KEY (profile_id) REFERENCES connection_profiles(id) ON DELETE CASCADE
+    TABLE "business_glossary" CONSTRAINT "business_glossary_profile_id_fkey" FOREIGN KEY (profile_id) REFERENCES connection_profiles(id) ON DELETE CASCADE
+    TABLE "query_history" CONSTRAINT "query_history_profile_id_fkey" FOREIGN KEY (profile_id) REFERENCES connection_profiles(id) ON DELETE SET NULL
+    TABLE "schema_metadata" CONSTRAINT "schema_metadata_profile_id_fkey" FOREIGN KEY (profile_id) REFERENCES connection_profiles(id) ON DELETE CASCADE
+Triggers:
+    trg_profiles_updated BEFORE UPDATE ON connection_profiles FOR EACH ROW EXECUTE FUNCTION update_updated_at()
+
+=== ALL TOKENS (first 5 cols) === 
+                  id                  |               owner_id               |              profile_id              |           name           |                description                |                            token_hash                            | permissions |  allowed_schemas  | allowed_tables | status | expires_at | revoked_at | rate_limit_per_minute | total_requests |         last_used_at          | last_used_ip |          created_at           |          updated_at           
+--------------------------------------+--------------------------------------+--------------------------------------+--------------------------+-------------------------------------------+------------------------------------------------------------------+-------------+-------------------+----------------+--------+------------+------------+-----------------------+----------------+-------------------------------+--------------+-------------------------------+-------------------------------
+ 20000000-0000-0000-0000-000000000002 | a2f5433e-8a98-444a-83f4-7a79f00a8efc | 10000000-0000-0000-0000-000000000001 | Admin Finance Full Token | Admin full access → Finance PG DB         | d69a42ff3fd15b6150fdf962548bcb4a63bfee387908b2ec8ac5b893895f8bc6 | ["query"]   | []                | []             | active |            |            |                   120 |            187 | 2026-06-15 09:09:46.805008+00 |              | 2026-06-15 09:37:02.789094+00 | 2026-06-15 09:39:46.805008+00
+ 20000000-0000-0000-0000-000000000001 | d9adf3e8-8683-4f42-9985-46d2626506b7 | 10000000-0000-0000-0000-000000000001 | Analyst1 Finance Token   | Analyst1 → Finance PG DB                  | c6328185317b4037b9040f4b1d57ab8d19bfc3d1b82cbdeb88e5bae85aa3ae44 | ["query"]   | []                | []             | active |            |            |                    60 |             94 | 2026-06-15 08:39:46.808781+00 |              | 2026-06-15 09:37:02.78242+00  | 2026-06-15 09:39:46.808781+00
+ 20000000-0000-0000-0000-000000000003 | 998868c7-4a67-4a6d-b95a-24ef29420629 | 10000000-0000-0000-0000-000000000002 | HR Assistant MySQL Token | HR Digital Assistant → MySQL (scope §4.4) | 17acb0c36d787cd57cb9c4add3c49be0ae88f019d3e91b27eb1c03d24a430ff8 | ["query"]   | ["hr", "payroll"] | []             | active |            |            |                   100 |             63 | 2026-06-15 07:39:46.810462+00 |              | 2026-06-15 09:37:02.792234+00 | 2026-06-15 09:39:46.810462+00
+(3 rows)
+
+Done 

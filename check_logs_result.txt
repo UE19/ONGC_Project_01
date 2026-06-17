@@ -1,0 +1,35 @@
+ONGC Explicit Test v8 - 16-06-2026 12:05:48
+URL: http://localhost/api/query | Auth: Bearer <token>
+(Using explicit table names to eliminate AI ambiguity)
+============================================================
+
+--- 001 FINANCE ---
+Q: show all budget allocations
+OK rows=19 | SQL: 
+
+--- 002 HR ---
+Q: list all records from employees table
+OK rows=30 | SQL: 
+
+--- 003 ASSETS ---
+Q: list all records from equipment_assets table
+OK rows=15 | SQL: 
+
+--- 004 OPERATIONS ---
+Q: list all wells where is_active is true
+OK rows=14 | SQL: 
+
+--- 005 PROCUREMENT ---
+Q: list all records from vendors table
+OK rows=15 | SQL: 
+
+--- 006 SAFETY ---
+Q: show all incidents where is_resolved is false
+OK rows=1 | SQL: 
+
+--- 007 REFINERY ---
+Q: show all assets
+OK rows=5 | SQL: 
+
+============================================================
+DONE - 16-06-2026 12:06:42

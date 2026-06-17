@@ -1,0 +1,106 @@
+ONGC Vanna Platform - Final Test v4 (WinHttp)
+================================================
+Time: 16-06-2026 09:56:16
+
+=== V2 TOKENS IN DB ===
+           name            | status  
+---------------------------+---------
+ Assets Test Token v2      | active
+ Finance Test Token v2     | active
+ Finance Test Token v2     | revoked
+ HR Test Token v2          | active
+ Operations Test Token v2  | active
+ Procurement Test Token v2 | active
+ Refinery Test Token v2    | active
+ Refinery Test Token v2    | revoked
+ Refinery Test Token v2    | revoked
+ Refinery Test Token v2    | revoked
+ Safety Test Token v2      | active
+(11 rows)
+
+
+=== SCHEMA METADATA COUNTS ===
+              profile_id              | count 
+--------------------------------------+-------
+ 10000000-0000-0000-0000-000000000001 |     4
+ 10000000-0000-0000-0000-000000000002 |     4
+ 10000000-0000-0000-0000-000000000003 |     4
+ 10000000-0000-0000-0000-000000000004 |     4
+ 10000000-0000-0000-0000-000000000005 |     4
+ 10000000-0000-0000-0000-000000000006 |     4
+ 10000000-0000-0000-0000-000000000008 |    10
+(7 rows)
+
+
+
+================================================
+=== RUNNING 7 PROFILE QUERIES ===
+================================================
+
+--- 001 FINANCE ---
+Q: show budget allocations by department
+FAIL: {"detail":"Token has been revoked"}
+
+--- 002 HR ---
+Q: list employees with their grade and base salary
+SUCCESS - rows=30
+SQL: "SELECT grade, base_salary FROM employees
+
+--- 003 ASSETS ---
+Q: show all equipment assets
+SUCCESS - rows=15
+SQL: "SELECT * FROM equipment_assets
+
+--- 004 OPERATIONS ---
+Q: show all active wells
+FAIL: {"detail":"Query execution failed: (psycopg2.errors.UndefinedColumn) column \"status\" does not exist\nLINE 1: SELECT * FROM (SELECT * FROM wells WHERE status = 'active') ...\n                                                 ^\n\n[SQL: SELECT * FROM (SELECT * FROM wells WHERE status = 'active') AS _
+
+--- 005 PROCUREMENT ---
+Q: list all active vendors
+FAIL: {"detail":"Query execution failed: (psycopg2.errors.UndefinedColumn) column \"status\" does not exist\nLINE 1: SELECT * FROM (SELECT * FROM Vendors WHERE status = 'active'...\n                                                   ^\n\n[SQL: SELECT * FROM (SELECT * FROM Vendors WHERE status = 'active') 
+
+--- 006 SAFETY ---
+Q: show all unresolved safety incidents
+FAIL: {"detail":"Query execution failed: (psycopg2.errors.UndefinedTable) relation \"safety_incidents\" does not exist\nLINE 1: SELECT * FROM (SELECT * FROM safety_incidents WHERE resolved...\n                                     ^\n\n[SQL: SELECT * FROM (SELECT * FROM safety_incidents WHERE resolved = 'f
+
+--- 007 REFINERY ---
+Q: show all refinery assets
+FAIL: {"detail":"Token has been revoked"}
+
+================================================
+=== VANNA AI SERVICE LOGS (last 30 lines) ===
+================================================
+INFO:     127.0.0.1:60214 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46604 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55722 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52368 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41096 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56238 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33034 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39044 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38586 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42060 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59108 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43894 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55460 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57602 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50682 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34334 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40764 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58362 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54082 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40662 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35638 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55070 - "GET /health HTTP/1.1" 200 OK
+INFO:     172.18.0.2:48864 - "POST /generate-sql HTTP/1.1" 200 OK
+INFO:     172.18.0.2:34314 - "POST /summarize HTTP/1.1" 200 OK
+INFO:     172.18.0.2:34320 - "POST /generate-sql HTTP/1.1" 200 OK
+INFO:     172.18.0.2:34332 - "POST /summarize HTTP/1.1" 200 OK
+INFO:     172.18.0.2:34344 - "POST /generate-sql HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52420 - "GET /health HTTP/1.1" 200 OK
+INFO:     172.18.0.2:34346 - "POST /generate-sql HTTP/1.1" 200 OK
+INFO:     172.18.0.2:45582 - "POST /generate-sql HTTP/1.1" 200 OK
+
+
+
+DONE - 16-06-2026 09:56:38

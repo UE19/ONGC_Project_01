@@ -1,0 +1,39 @@
+=== KILL STUCK WSCRIPT === 
+ERROR: The process "wscript.exe" not found.
+=== RESTART AI SERVICE (clear stuck Ollama calls) === 
+vanna_ai_service
+=== HEALTH CHECK === 
+{"status":"ok","service":"vanna-ai-service"}=== TEST FINANCE WITH CURL (30s timeout) === 
+=== TEST HR WITH CURL (sanity check) === 
+=== BACKEND LOGS (last 30) === 
+2026-06-16 05:02:21 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:59312 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 05:02:36 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:40240 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 05:02:36 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:43650 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 05:02:51 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:57372 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 05:02:51 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:41164 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 05:03:06 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:35348 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 05:03:07 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:40736 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 05:03:21 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:57860 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 05:03:22 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:37510 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 05:03:37 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:49838 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 05:03:37 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:59088 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 05:03:52 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:54466 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 05:03:52 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:41236 - "GET /health HTTP/1.0" 200 OK
+2026-06-16 05:04:07 [info     ] request                        ip=127.0.0.1 method=GET path=/health status=200
+INFO:     127.0.0.1:57344 - "GET /health HTTP/1.1" 200 OK
+2026-06-16 05:04:07 [info     ] request                        ip=172.18.0.4 method=GET path=/health status=200
+INFO:     172.18.0.4:47308 - "GET /health HTTP/1.0" 200 OK
+Done 

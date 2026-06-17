@@ -1,0 +1,138 @@
+ONGC Vanna Platform - Final Test v3
+======================================
+Time: 16-06-2026 09:51:38
+
+=== VERIFY V2 TOKENS IN DB ===
+           name            | status  
+---------------------------+---------
+ Assets Test Token v2      | active
+ Finance Test Token v2     | active
+ Finance Test Token v2     | revoked
+ HR Test Token v2          | active
+ Operations Test Token v2  | active
+ Procurement Test Token v2 | active
+ Refinery Test Token v2    | active
+ Refinery Test Token v2    | revoked
+ Refinery Test Token v2    | revoked
+ Refinery Test Token v2    | revoked
+ Safety Test Token v2      | active
+(11 rows)
+
+
+=== SCHEMA METADATA COUNTS ===
+              profile_id              | count 
+--------------------------------------+-------
+ 10000000-0000-0000-0000-000000000001 |     4
+ 10000000-0000-0000-0000-000000000002 |     4
+ 10000000-0000-0000-0000-000000000003 |     4
+ 10000000-0000-0000-0000-000000000004 |     4
+ 10000000-0000-0000-0000-000000000005 |     4
+ 10000000-0000-0000-0000-000000000006 |     4
+ 10000000-0000-0000-0000-000000000008 |    10
+(7 rows)
+
+
+
+======================================
+=== RUNNING 7 PROFILE QUERIES ===
+======================================
+
+--- 001 FINANCE ---
+TOKEN: ongc_fin_v2_tok
+QUESTION: show budget allocations by department
+RESPONSE: {"detail":[{"type":"json_invalid","loc":["body",1],"msg":"JSON decode error","input":{},"ctx":{"error":"Expecting property name enclosed in double quotes"}}]}
+==> FAIL: {"detail":[{"type":"json_invalid","loc":["body",1],"msg":"JSON decode error","input":{},"ctx":{"error":"Expecting property name enclosed in double quotes"}}]}
+
+--- 002 HR ---
+TOKEN: ongc_hr_v2_tok
+QUESTION: list employees with their grade and base salary
+RESPONSE: {"detail":[{"type":"json_invalid","loc":["body",1],"msg":"JSON decode error","input":{},"ctx":{"error":"Expecting property name enclosed in double quotes"}}]}
+==> FAIL: {"detail":[{"type":"json_invalid","loc":["body",1],"msg":"JSON decode error","input":{},"ctx":{"error":"Expecting property name enclosed in double quotes"}}]}
+
+--- 003 ASSETS ---
+TOKEN: ongc_assets_v2_tok
+QUESTION: show all equipment assets
+RESPONSE: {"detail":[{"type":"json_invalid","loc":["body",1],"msg":"JSON decode error","input":{},"ctx":{"error":"Expecting property name enclosed in double quotes"}}]}
+==> FAIL: {"detail":[{"type":"json_invalid","loc":["body",1],"msg":"JSON decode error","input":{},"ctx":{"error":"Expecting property name enclosed in double quotes"}}]}
+
+--- 004 OPERATIONS ---
+TOKEN: ongc_ops_v2_tok
+QUESTION: show all active wells
+RESPONSE: {"detail":[{"type":"json_invalid","loc":["body",1],"msg":"JSON decode error","input":{},"ctx":{"error":"Expecting property name enclosed in double quotes"}}]}
+==> FAIL: {"detail":[{"type":"json_invalid","loc":["body",1],"msg":"JSON decode error","input":{},"ctx":{"error":"Expecting property name enclosed in double quotes"}}]}
+
+--- 005 PROCUREMENT ---
+TOKEN: ongc_proc_v2_tok
+QUESTION: list all active vendors
+RESPONSE: {"detail":[{"type":"json_invalid","loc":["body",1],"msg":"JSON decode error","input":{},"ctx":{"error":"Expecting property name enclosed in double quotes"}}]}
+==> FAIL: {"detail":[{"type":"json_invalid","loc":["body",1],"msg":"JSON decode error","input":{},"ctx":{"error":"Expecting property name enclosed in double quotes"}}]}
+
+--- 006 SAFETY ---
+TOKEN: ongc_safe_v2_tok
+QUESTION: show all unresolved safety incidents
+RESPONSE: {"detail":[{"type":"json_invalid","loc":["body",1],"msg":"JSON decode error","input":{},"ctx":{"error":"Expecting property name enclosed in double quotes"}}]}
+==> FAIL: {"detail":[{"type":"json_invalid","loc":["body",1],"msg":"JSON decode error","input":{},"ctx":{"error":"Expecting property name enclosed in double quotes"}}]}
+
+--- 007 REFINERY ---
+TOKEN: ongc_refinery_v2_tok
+QUESTION: show all refinery assets
+RESPONSE: {"detail":[{"type":"json_invalid","loc":["body",1],"msg":"JSON decode error","input":{},"ctx":{"error":"Expecting property name enclosed in double quotes"}}]}
+==> FAIL: {"detail":[{"type":"json_invalid","loc":["body",1],"msg":"JSON decode error","input":{},"ctx":{"error":"Expecting property name enclosed in double quotes"}}]}
+
+======================================
+=== VANNA_AI LOGS (last 50 lines) ===
+======================================
+INFO:     127.0.0.1:54834 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36486 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47274 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41080 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38170 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44430 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41292 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49866 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36898 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49450 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38312 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57598 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60652 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59150 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45352 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53930 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46982 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40398 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41892 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56420 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48526 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53328 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33480 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48830 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50002 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38504 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36938 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49254 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38264 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58858 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53236 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33688 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39676 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59888 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44458 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49098 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33254 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47700 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40940 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56790 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41720 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43570 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54360 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60214 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46604 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55722 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52368 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41096 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56238 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33034 - "GET /health HTTP/1.1" 200 OK
+
+
+
+ALL DONE - 16-06-2026 09:52:39

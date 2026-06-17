@@ -1,0 +1,15 @@
+                  id                  |            name            |                            token_hash                            | status |           profile_name           
+--------------------------------------+----------------------------+------------------------------------------------------------------+--------+----------------------------------
+ 20000000-0000-0000-0000-000000000001 | Analyst1 Finance Token     | c6328185317b4037b9040f4b1d57ab8d19bfc3d1b82cbdeb88e5bae85aa3ae44 | active | ONGC Finance DB (PostgreSQL)
+ 20000000-0000-0000-0000-000000000002 | Admin Finance Full Token   | d69a42ff3fd15b6150fdf962548bcb4a63bfee387908b2ec8ac5b893895f8bc6 | active | ONGC Finance DB (PostgreSQL)
+ 7d6303a0-1644-42ad-9c3d-db09dd2f68b3 | Finance Assistant PG Token | e64fc11bf17f68f5accebfa91d59a7f531555b0141332ff51e8de2a73ea43bde | active | ONGC Finance DB (PostgreSQL)
+ 3a62d2ce-17e1-4a7d-a570-09bb815f931f | Finance Assistant PG Token | e16199d19c9fa60b86442b6a5371aeb8d3db421eb3af7d14e116a1a6faf99db9 | active | ONGC Finance DB (PostgreSQL)
+ 0dbd4c61-ea2e-4da9-852b-b7fb8090db66 | Finance Assistant PG Token | abc6389b273b9e0fa482fea029cc17020fa5ea8b04478df5ffab92c5b46c0eb3 | active | ONGC Finance DB (PostgreSQL)
+ 20000000-0000-0000-0000-000000000003 | HR Assistant MySQL Token   | 17acb0c36d787cd57cb9c4add3c49be0ae88f019d3e91b27eb1c03d24a430ff8 | active | ONGC HR DB (MySQL)
+ 20000000-0000-0000-0000-000000000005 | ONGC Procurement Token     | 90c81199c4bc5a7dbb7e254a3b40a591436b05804fd8ad4aa80c0dee04f82b58 | active | ONGC Procurement DB (PostgreSQL)
+ 20000000-0000-0000-0000-000000000006 | ONGC Safety Token          | 512fcf9165d4ba1f69b4adccc50d1ea47fec6e4f34bd912e382baf5acc6b0777 | active | ONGC Safety DB (MySQL)
+ ab44ea3f-bb54-489e-9432-2192175040db | Test Console Token         | 75a7a627568b7a338bf169dd898ed8c82d4692cc0311106fb60512618b368fd3 | active | Platform DB (Test)
+ e23641c7-acd7-45b2-9f15-366544ca7727 | Test Token                 | 2ca65eefee64b82e468531cef4b86e2e2abffb554963a88dd1f7325a6d44ca15 | active | Platform DB (Test)
+ a70e35ac-d310-474e-b6d4-6f1932faa02c | ONGC Refinery Token        | 42af5df83fab06817edc99570ecb1c2f367497fd0173274f119842c2c377e3af | active | ONGC Refinery DB
+(11 rows)
+
