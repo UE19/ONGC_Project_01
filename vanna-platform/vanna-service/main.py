@@ -20,15 +20,15 @@ from vanna_engine import VannaEngine
 
 logger = structlog.get_logger()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
-VANNA_MODEL = os.getenv("VANNA_MODEL", "gpt-4o-mini")
-DB_URL = os.getenv("SYNC_DATABASE_URL", "")
+OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "gpt-4o-mini")
 
-engine = VannaEngine(openai_api_key=OPENAI_API_KEY, model=VANNA_MODEL, db_url=DB_URL)
+
+engine = VannaEngine(openai_api_key=OPENAI_API_KEY, model=OLLAMA_MODEL)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    logger.info("Vanna AI Service starting", model=VANNA_MODEL)
+    logger.info("Vanna AI Service starting", model=OLLAMA_MODEL)
     yield
     logger.info("Vanna AI Service stopping")
 

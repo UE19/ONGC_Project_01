@@ -14,11 +14,11 @@ from typing import Any, Dict, List, Optional
 from openai import OpenAI
 
 # ── Ollama client (OpenAI-compatible, no API key needed) ──────────────────────
-OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://host.docker.internal:11434/v1")
-OLLAMA_MODEL    = os.getenv("OLLAMA_MODEL", "llama3.2")
+OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://ollama:11434/v1")
+OPENAPI_API_KEY = os.getenv("OPENAI_API_KEY", "")
 
 def _ollama_client() -> OpenAI:
-    return OpenAI(api_key="ollama", base_url=OLLAMA_BASE_URL)
+    return OpenAI(api_key=OPENAPI_API_KEY, base_url=OLLAMA_BASE_URL)
 
 
 class VannaEngine:
@@ -28,10 +28,9 @@ class VannaEngine:
     Post-processing corrects common table/column name errors from small models.
     """
 
-    def __init__(self, openai_api_key: str, model: str, db_url: str):
+    def __init__(self, openai_api_key: str, model: str):
         self.openai_api_key = openai_api_key
-        self.model = OLLAMA_MODEL
-        self.db_url = db_url
+        self.model = model
         self._instances: Dict[str, Any] = {}
 
     # ── SQL Generation ────────────────────────────────────────────────────────
@@ -285,7 +284,7 @@ class VannaEngine:
         try:
             client = _ollama_client()
             resp = client.chat.completions.create(
-                model=OLLAMA_MODEL,
+                model=self.model,
                 messages=[
                     {"role": "system", "content": system_msg},
                     {"role": "user",   "content": user_msg},
@@ -320,7 +319,7 @@ class VannaEngine:
         try:
             client = _ollama_client()
             resp = client.chat.completions.create(
-                model=OLLAMA_MODEL,
+                model=self.model,
                 messages=[{
                     "role": "user",
                     "content": f"Explain this {db_type} SQL in plain English, briefly:\n\n{sql}",
@@ -346,7 +345,7 @@ class VannaEngine:
             results_preview = str(data[:5])
             client = _ollama_client()
             resp = client.chat.completions.create(
-                model=OLLAMA_MODEL,
+                model=self.model,
                 messages=[{
                     "role": "user",
                     "content": (

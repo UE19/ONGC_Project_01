@@ -21,7 +21,7 @@ class Settings(BaseSettings):
     # Vanna AI Service
     VANNA_SERVICE_URL: str = "http://vanna-service:8001"
     OPENAI_API_KEY: str = ""
-    VANNA_MODEL: str = "gpt-4o-mini"
+    OLLAMA_MODEL: str = "gpt-4o-mini"
 
     # Rate Limiting
     RATE_LIMIT_PER_MINUTE: int = 60

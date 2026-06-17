@@ -76,7 +76,7 @@ docker compose up -d --build
 | `DATABASE_URL` | Async PostgreSQL connection URL | Yes |
 | `REDIS_URL` | Redis connection URL | Yes |
 | `OPENAI_API_KEY` | OpenAI API key for Vanna | Yes |
-| `VANNA_MODEL` | OpenAI model name (default: gpt-4o-mini) | No |
+| `OLLAMA_MODEL` | OpenAI model name (default: gpt-4o-mini) | No |
 | `POSTGRES_USER` | PostgreSQL admin username | Yes |
 | `POSTGRES_PASSWORD` | PostgreSQL admin password | Yes |
 | `POSTGRES_DB` | PostgreSQL database name | Yes |

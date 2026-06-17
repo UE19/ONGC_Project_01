@@ -112,6 +112,8 @@ services:
     restart: unless-stopped
 
   mongodb:
+    profiles:
+      - testing
     image: mongo:7
     container_name: vanna_mongodb
     environment:
@@ -144,13 +146,31 @@ services:
     networks:
       - vanna_net
     restart: unless-stopped
+    
+  ollama:
+    profiles:
+      - testing
+    image: ollama/ollama:latest
+    container_name: vanna_ollama
+    expose:
+      - "11434"
+    volumes:
+      - ollama_data:/models
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fs http://localhost:11434/v1/models || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    networks:
+      - vanna_net
+    restart: unless-stopped
 
 volumes:
   postgres_data:
   redis_data:
   vanna_chroma:
   mongo_data:
-
+  ollama_data:
 networks:
   vanna_net:
     driver: bridge

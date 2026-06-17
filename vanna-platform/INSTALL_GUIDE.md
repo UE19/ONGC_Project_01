@@ -417,7 +417,7 @@ docker run --rm python:3.11-alpine sh -c "pip install cryptography -q && python 
 ```
 
 ### Vanna AI service shows "model not found"
-The default model is `gpt-4o-mini`. If you want to use a different model, set `VANNA_MODEL=gpt-4o` in `.env`.
+The default model is `gpt-4o-mini`. If you want to use a different model, set `OLLAMA_MODEL=gpt-4o` in `.env`.
 
 ---
 
