@@ -89,12 +89,14 @@ async def list_tokens(
 
 @router.get("/validate", response_model=TokenValidateResponse)
 async def validate_token(
+    request: Request,
     api_token: APIToken = Depends(get_api_token),
     db: AsyncSession = Depends(get_db),
 ):
     """External apps use this to verify their token is still valid."""
     await log_event(db, AuditAction.TOKEN_VALIDATED, resource_type="api_token",
-                    resource_id=str(api_token.id))
+                    resource_id=str(api_token.id),
+                    ip_address=request.client.host if request.client else None)
     return TokenValidateResponse(
         valid=True,
         token_id=api_token.id,

@@ -11,6 +11,7 @@ import uuid
 
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy import func, select
+from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.v1.deps import get_current_user, require_admin
@@ -18,6 +19,7 @@ from core.database import get_db
 from models.audit_log import AuditLog, AuditAction
 from models.api_token import APIToken
 from models.query_history import QueryHistory
+from models.connection_profile import ConnectionProfile
 from models.user import User
 
 router = APIRouter(prefix="/audit", tags=["Audit & Monitoring"])
@@ -36,7 +38,7 @@ async def get_audit_logs(
 ):
     """Full audit log with filters — admin only."""
     offset = (page - 1) * page_size
-    stmt = select(AuditLog).order_by(AuditLog.created_at.desc())
+    stmt = select(AuditLog).order_by(AuditLog.created_at.desc()).options(selectinload(AuditLog.user))
 
     if action:
         stmt = stmt.where(AuditLog.action == action)
@@ -61,13 +63,18 @@ async def get_audit_logs(
             {
                 "id": str(log.id),
                 "user_id": str(log.user_id) if log.user_id else None,
+                "user_email": (log.user.email if getattr(log, "user", None) else None),
                 "action": log.action.value,
                 "resource_type": log.resource_type,
                 "resource_id": log.resource_id,
                 "ip_address": log.ip_address,
                 "status": log.status,
+                # boolean success for frontend convenience
+                "success": bool(str(log.status).lower() in ("success", "true", "completed")),
                 "details": log.details,
                 "created_at": log.created_at.isoformat(),
+                # frontend expects `timestamp` key for the audit table
+                "timestamp": log.created_at.isoformat(),
             }
             for log in logs
         ],
@@ -106,6 +113,16 @@ async def get_query_history(
     result = await db.execute(stmt.offset(offset).limit(page_size))
     items = result.scalars().all()
 
+    # Fetch profile names in a single query to avoid N+1 problems
+    profile_ids = {q.profile_id for q in items if getattr(q, "profile_id", None)}
+    profile_map = {}
+    if profile_ids:
+        prof_res = await db.execute(
+            select(ConnectionProfile.id, ConnectionProfile.profile_name).where(ConnectionProfile.id.in_(list(profile_ids)))
+        )
+        for pid, pname in prof_res.all():
+            profile_map[str(pid)] = pname
+
     return {
         "total": total, "page": page, "page_size": page_size,
         "items": [
@@ -115,11 +132,13 @@ async def get_query_history(
                 "generated_sql": q.generated_sql,
                 "summary": q.response_summary,
                 "status": q.status,
-                "error": q.error_message,
+                "error_message": q.error_message,
                 "row_count": q.row_count,
                 "execution_time_ms": q.execution_time_ms,
                 "ip_address": q.ip_address,
                 "db_type": q.db_type,
+                "profile_id": str(q.profile_id) if q.profile_id else None,
+                "profile_name": profile_map.get(str(q.profile_id)) if q.profile_id else None,
                 "created_at": q.created_at.isoformat(),
             }
             for q in items
@@ -180,7 +199,7 @@ async def failed_queries(
             "question": q.natural_language_query,
             "generated_sql": q.generated_sql,
             "status": q.status,
-            "error": q.error_message,
+            "error_message": q.error_message,
             "ip_address": q.ip_address,
             "db_type": q.db_type,
             "created_at": q.created_at.isoformat(),

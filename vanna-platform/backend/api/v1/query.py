@@ -12,7 +12,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.v1.deps import get_api_token, get_current_user
-from core.database import get_db
+from core.database import get_db, AsyncSessionLocal
 from middleware.audit_middleware import log_event
 from middleware.rate_limiter import check_api_token_rate_limit
 from models.api_token import APIToken
@@ -92,7 +92,8 @@ async def execute_query(
     if not is_valid:
         await _log_query(db, api_token, profile, question, generated_sql, "blocked", reason, request)
         await log_event(db, AuditAction.QUERY_BLOCKED, user_id=api_token.owner_id,
-                        details={"reason": reason, "sql": generated_sql})
+                        details={"reason": reason, "sql": generated_sql},
+                        ip_address=request.client.host if request.client else None)
         raise HTTPException(status_code=403, detail=f"Query blocked: {reason}")
 
     # ── Execute query ─────────────────────────────────────────────────────────
@@ -103,7 +104,8 @@ async def execute_query(
     except Exception as e:
         await _log_query(db, api_token, profile, question, generated_sql, "failed", str(e), request)
         await log_event(db, AuditAction.QUERY_FAILED, user_id=api_token.owner_id,
-                        details={"error": str(e)})
+                        details={"error": str(e)},
+                        ip_address=request.client.host if request.client else None)
         raise HTTPException(status_code=500, detail=f"Query execution failed: {str(e)}")
 
     # ── Generate summary ──────────────────────────────────────────────────────
@@ -125,7 +127,8 @@ async def execute_query(
         explanation=explanation,
     )
     await log_event(db, AuditAction.QUERY_EXECUTED, user_id=api_token.owner_id,
-                    resource_type="query", resource_id=str(query_id))
+                    resource_type="query", resource_id=str(query_id),
+                    ip_address=request.client.host if request.client else None)
 
     return QueryResponse(
         query_id=query_id,
@@ -205,6 +208,10 @@ async def export_excel(
 # ── Helpers ───────────────────────────────────────────────────────────────────
 async def _log_query(db, api_token, profile, question, sql, status, error, request,
                      row_count=None, execution_time_ms=None, summary=None, explanation=None) -> uuid.UUID:
+    """
+    Persist a QueryHistory row using an independent session so that failures
+    in the request do not cause the log to be rolled back.
+    """
     qh = QueryHistory(
         token_id=api_token.id,
         profile_id=profile.id,
@@ -221,8 +228,16 @@ async def _log_query(db, api_token, profile, question, sql, status, error, reque
         user_agent=request.headers.get("User-Agent"),
         db_type=profile.db_type.value,
     )
-    db.add(qh)
-    await db.flush()
+    try:
+        async with AsyncSessionLocal() as sess:
+            try:
+                sess.add(qh)
+                await sess.commit()
+            except Exception:
+                await sess.rollback()
+    except Exception:
+        # audit of query history must not raise - swallow any errors
+        pass
     return qh.id
 
 

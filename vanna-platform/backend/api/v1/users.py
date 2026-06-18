@@ -8,7 +8,7 @@ User management endpoints (admin-level).
 import uuid
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -54,6 +54,7 @@ async def get_user(
 async def update_user(
     user_id: uuid.UUID,
     body: UserUpdate,
+    request: Request,
     db: AsyncSession = Depends(get_db),
     current_admin: User = Depends(require_admin),
 ):
@@ -70,13 +71,15 @@ async def update_user(
         setattr(user, field, val)
 
     await log_event(db, AuditAction.USER_UPDATED, user_id=current_admin.id,
-                    resource_type="user", resource_id=str(user_id))
+                    resource_type="user", resource_id=str(user_id),
+                    ip_address=request.client.host if request.client else None)
     return user
 
 
 @router.delete("/{user_id}", status_code=204)
 async def deactivate_user(
     user_id: uuid.UUID,
+    request: Request,
     db: AsyncSession = Depends(get_db),
     current_admin: User = Depends(require_admin),
 ):
@@ -86,4 +89,5 @@ async def deactivate_user(
         raise HTTPException(status_code=404, detail="User not found")
     user.is_active = False
     await log_event(db, AuditAction.USER_DEACTIVATED, user_id=current_admin.id,
-                    resource_type="user", resource_id=str(user_id))
+                    resource_type="user", resource_id=str(user_id),
+                    ip_address=request.client.host if request.client else None)

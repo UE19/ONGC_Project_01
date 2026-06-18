@@ -178,7 +178,9 @@ export default function AuditLogs() {
           {v || "—"}
         </span>
       )},
-      { key: "db_type",       label: "DB",      render: (v) => <span style={{ fontFamily: "monospace", fontSize: 11 }}>{v}</span> },
+      { key: "db_type",       label: "DB Profile",      render: (v, row) => (
+        <span style={{ fontFamily: "monospace", fontSize: 11 }}>{row.profile_name || v || "—"}</span>
+      ) },
       { key: "execution_time_ms", label: "Time (ms)", render: (v) => (
         <span style={{ color: v > 2000 ? "#f59e0b" : "var(--text2)", fontFamily: "monospace", fontSize: 12 }}>{v ?? "—"}</span>
       )},

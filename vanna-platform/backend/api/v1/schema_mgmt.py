@@ -10,7 +10,7 @@ Schema Ingestion & Training endpoints.
 import uuid
 from typing import List, Optional
 
-from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Request
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -32,6 +32,7 @@ router = APIRouter(prefix="/schema", tags=["Schema Ingestion & Training"])
 async def ingest_schema(
     profile_id: uuid.UUID,
     background_tasks: BackgroundTasks,
+    request: Request,
     schemas: Optional[List[str]] = None,
     tables: Optional[List[str]] = None,
     db: AsyncSession = Depends(get_db),
@@ -47,7 +48,8 @@ async def ingest_schema(
         _run_ingestion, profile_id=profile_id, profile=profile, schemas=schemas, tables=tables
     )
     await log_event(db, AuditAction.SCHEMA_INGESTED, user_id=current_user.id,
-                    resource_type="connection_profile", resource_id=str(profile_id))
+                    resource_type="connection_profile", resource_id=str(profile_id),
+                    ip_address=request.client.host if request.client else None)
     return {"message": "Schema ingestion started", "profile_id": str(profile_id)}
 
 

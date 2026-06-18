@@ -5,6 +5,7 @@ import uuid
 from typing import Optional
 
 from sqlalchemy.ext.asyncio import AsyncSession
+from core.database import AsyncSessionLocal
 
 from models.audit_log import AuditLog, AuditAction
 
@@ -35,7 +36,14 @@ async def log_event(
             details=details or {},
             status=status,
         )
-        db.add(entry)
-        await db.flush()
+        # Use an independent session so audit logs persist even if the caller
+        # request transaction is rolled back (e.g. on errors). Audit failures
+        # must never interrupt the main request flow.
+        async with AsyncSessionLocal() as sess:
+            try:
+                sess.add(entry)
+                await sess.commit()
+            except Exception:
+                await sess.rollback()
     except Exception:
         pass  # Audit errors must never surface to the caller
