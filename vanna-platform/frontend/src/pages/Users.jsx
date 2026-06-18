@@ -82,10 +82,10 @@ function UserRow({ u, isSuperAdmin, onRoleChange, onDeactivate, currentUserId })
       {/* User */}
       <td>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <AvatarCircle name={u.name || u.email} size={34} />
+          <AvatarCircle name={u.full_name || u.username || u.email} size={34} />
           <div style={{ minWidth: 0 }}>
-            <div style={{ color: "var(--text)", fontWeight: 600, fontSize: 13 }}>
-              {u.name || "—"}
+              <div style={{ color: "var(--text)", fontWeight: 600, fontSize: 13 }}>
+              {u.full_name || u.username || "—"}
               {isMe && (
                 <span style={{
                   marginLeft: 6, fontSize: 9, color: "var(--accent)",
@@ -133,7 +133,7 @@ function UserRow({ u, isSuperAdmin, onRoleChange, onDeactivate, currentUserId })
 
       {/* Last Login */}
       <td style={{ color: "var(--text3)", fontSize: 12, whiteSpace: "nowrap" }}>
-        {fmt(u.last_login_at)}
+        {fmt(u.last_login)}
       </td>
 
       {/* Joined */}
@@ -153,7 +153,7 @@ function UserRow({ u, isSuperAdmin, onRoleChange, onDeactivate, currentUserId })
             <UserX size={13} /> Deactivate
           </button>
         ) : (
-          <span style={{ color: "var(--text3)", fontSize: 12 }}>—</span>
+          <span style={{ color: "var(--text3)", fontSize: 12 }}>Not Allowed</span>
         )}
       </td>
     </tr>
@@ -220,7 +220,7 @@ export default function Users() {
     if (!search.trim()) return true;
     const q = search.toLowerCase();
     return (
-      (u.name || "").toLowerCase().includes(q) ||
+      (u.full_name || u.username || "").toLowerCase().includes(q) ||
       (u.email || "").toLowerCase().includes(q) ||
       (u.role || "").toLowerCase().includes(q)
     );

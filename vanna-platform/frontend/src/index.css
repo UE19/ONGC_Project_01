@@ -22,6 +22,22 @@
   --accent-subtle: rgba(204,0,0,0.08);
   --sidebar-bg: #0a1220;
   --sidebar-border: #162035;
+  --sidebar-header-bg: linear-gradient(160deg, #1a0000 0%, #2d0000 50%, #1a0000 100%);
+  --sidebar-brand-text: #ffffff;
+  --sidebar-subtext: rgba(255,160,160,0.75);
+  --sidebar-user-bg: rgba(0,0,0,0.2);
+  --sidebar-toggle-bg: rgba(255,255,255,0.04);
+  --sidebar-toggle-border: rgba(255,255,255,0.07);
+  --sidebar-toggle-text: rgba(180,200,230,0.75);
+  --sidebar-toggle-bg-hover: rgba(255,255,255,0.08);
+  --sidebar-toggle-text-hover: #ffffff;
+  --sidebar-toggle-border-hover: rgba(255,255,255,0.12);
+  --sidebar-logout-bg: transparent;
+  --sidebar-logout-border: rgba(239,68,68,0.2);
+  --sidebar-logout-color: rgba(239,68,68,0.7);
+  --sidebar-logout-hover-bg: rgba(239,68,68,0.1);
+  --sidebar-logout-hover-color: #f87171;
+  --sidebar-logout-hover-border: rgba(239,68,68,0.4);
   --header-bg: #0d1526;
   --input-bg: #0b1422;
   --input-border: #1e3050;
@@ -58,8 +74,24 @@
   --accent-2: #ff3333;
   --accent-glow: rgba(204,0,0,0.12);
   --accent-subtle: rgba(204,0,0,0.06);
-  --sidebar-bg: #0a1220;
-  --sidebar-border: #162035;
+  --sidebar-bg: var(--card2);
+  --sidebar-border: var(--border);
+  --sidebar-header-bg: var(--card);
+  --sidebar-brand-text: var(--text);
+  --sidebar-subtext: var(--text3);
+  --sidebar-user-bg: rgba(0,0,0,0.04);
+  --sidebar-toggle-bg: rgba(0,0,0,0.02);
+  --sidebar-toggle-border: 1px solid var(--border);
+  --sidebar-toggle-text: var(--text2);
+  --sidebar-toggle-bg-hover: var(--surface2);
+  --sidebar-toggle-text-hover: var(--text);
+  --sidebar-toggle-border-hover: var(--border2);
+  --sidebar-logout-bg: transparent;
+  --sidebar-logout-border: 1px solid rgba(204,0,0,0.12);
+  --sidebar-logout-color: var(--accent);
+  --sidebar-logout-hover-bg: rgba(204,0,0,0.04);
+  --sidebar-logout-hover-color: var(--accent);
+  --sidebar-logout-hover-border: rgba(204,0,0,0.18);
   --header-bg: #ffffff;
   --input-bg: #f8fafd;
   --input-border: #dce5f0;
@@ -206,6 +238,21 @@ html, body {
 .ongc-btn-ghost.danger:hover { color: #f87171; background: rgba(239,68,68,0.1); }
 .ongc-btn-ghost.warn:hover { color: #facc15; background: rgba(234,179,8,0.1); }
 .ongc-btn-ghost.info:hover { color: #22d3ee; background: rgba(34,211,238,0.1); }
+
+/* Sidebar-specific utilities */
+.sidebar-toggle {
+  width: 100%; display: flex; align-items: center; gap: 10px; padding: 9px 12px;
+  background: var(--sidebar-toggle-bg); border: 1px solid var(--sidebar-toggle-border);
+  border-radius: 10px; cursor: pointer; color: var(--sidebar-toggle-text); font-size: 13px; font-weight: 500;
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
+}
+.sidebar-toggle:hover { background: var(--sidebar-toggle-bg-hover); color: var(--sidebar-toggle-text-hover); border-color: var(--sidebar-toggle-border-hover); }
+.sidebar-logout {
+  width: 100%; display:flex; align-items:center; gap:8px; padding:8px 10px; background: var(--sidebar-logout-bg);
+  border: 1px solid var(--sidebar-logout-border); border-radius:8px; cursor:pointer; color: var(--sidebar-logout-color);
+  font-size:13px; font-weight:500; transition: all 0.12s;
+}
+.sidebar-logout:hover { background: var(--sidebar-logout-hover-bg); color: var(--sidebar-logout-hover-color); border-color: var(--sidebar-logout-hover-border); }
 
 /* Badge */
 .badge-active  { background: var(--badge-active);  color: var(--badge-active-text);  font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 600; }

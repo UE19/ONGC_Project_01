@@ -71,7 +71,7 @@ export function Sidebar() {
       <div style={{
         padding: "20px 18px 16px",
         borderBottom: "1px solid var(--sidebar-border)",
-        background: "linear-gradient(160deg, #1a0000 0%, #2d0000 50%, #1a0000 100%)",
+        background: "var(--sidebar-header-bg)",
         position: "relative",
         overflow: "hidden",
       }}>
@@ -95,14 +95,14 @@ export function Sidebar() {
             }}
           />
           <div>
-            <div style={{ color: "#fff", fontWeight: 800, fontSize: 16, letterSpacing: 1 }}>ONGC</div>
-            <div style={{ color: "rgba(255,160,160,0.75)", fontSize: 10, marginTop: 1, letterSpacing: 0.5 }}>AI QUERY PLATFORM</div>
+            <div style={{ color: "var(--sidebar-brand-text)", fontWeight: 800, fontSize: 16, letterSpacing: 1 }}>ONGC</div>
+            <div style={{ color: "var(--sidebar-subtext)", fontSize: 10, marginTop: 1, letterSpacing: 0.5 }}>AI QUERY PLATFORM</div>
           </div>
         </div>
         <div style={{
           marginTop: 10,
           fontSize: 11,
-          color: "rgba(255,200,200,0.5)",
+          color: "var(--sidebar-subtext)",
           fontStyle: "italic",
           letterSpacing: 0.3,
         }}>
@@ -139,26 +139,7 @@ export function Sidebar() {
 
       {/* ── Theme Toggle ── */}
       <div style={{ padding: "12px 14px" }}>
-        <button
-          onClick={toggleTheme}
-          style={{
-            width: "100%",
-            display: "flex",
-            alignItems: "center",
-            gap: 10,
-            padding: "9px 12px",
-            background: "rgba(255,255,255,0.04)",
-            border: "1px solid rgba(255,255,255,0.07)",
-            borderRadius: 10,
-            cursor: "pointer",
-            color: "rgba(180,200,230,0.75)",
-            fontSize: 13,
-            fontWeight: 500,
-            transition: "background 0.2s, color 0.2s",
-          }}
-          onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.08)"; e.currentTarget.style.color = "#fff"; }}
-          onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.04)"; e.currentTarget.style.color = "rgba(180,200,230,0.75)"; }}
-        >
+        <button onClick={toggleTheme} className="sidebar-toggle">
           {theme === "dark"
             ? <><Sun size={15} /> Switch to Light Mode</>
             : <><Moon size={15} /> Switch to Dark Mode</>
@@ -170,20 +151,20 @@ export function Sidebar() {
       <div style={{
         padding: "14px 14px 18px",
         borderTop: "1px solid var(--sidebar-border)",
-        background: "rgba(0,0,0,0.2)",
+        background: "var(--sidebar-user-bg)",
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
           <AvatarCircle name={user?.full_name} email={user?.email} />
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{
-              fontSize: 13, fontWeight: 600, color: "#e8eef7",
+              fontSize: 13, fontWeight: 600, color: "var(--sidebar-brand-text)",
               whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
             }}>
               {user?.full_name || user?.email}
             </div>
             <div style={{
               fontSize: 10, fontWeight: 600,
-              color: "#CC0000",
+              color: "var(--accent)",
               textTransform: "uppercase",
               letterSpacing: 0.8,
               marginTop: 2,
@@ -192,36 +173,7 @@ export function Sidebar() {
             </div>
           </div>
         </div>
-
-        <button
-          onClick={handleLogout}
-          disabled={loggingOut}
-          style={{
-            width: "100%",
-            display: "flex",
-            alignItems: "center",
-            gap: 8,
-            padding: "8px 10px",
-            background: "transparent",
-            border: "1px solid rgba(239,68,68,0.2)",
-            borderRadius: 8,
-            cursor: "pointer",
-            color: "rgba(239,68,68,0.7)",
-            fontSize: 13,
-            fontWeight: 500,
-            transition: "all 0.2s",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = "rgba(239,68,68,0.1)";
-            e.currentTarget.style.color = "#f87171";
-            e.currentTarget.style.borderColor = "rgba(239,68,68,0.4)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = "transparent";
-            e.currentTarget.style.color = "rgba(239,68,68,0.7)";
-            e.currentTarget.style.borderColor = "rgba(239,68,68,0.2)";
-          }}
-        >
+        <button onClick={handleLogout} disabled={loggingOut} className="sidebar-logout">
           <LogOut size={14} />
           {loggingOut ? "Signing out…" : "Sign Out"}
         </button>

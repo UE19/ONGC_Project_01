@@ -56,10 +56,12 @@ function DataTable({ cols, rows, empty = "No data available" }) {
             <tr key={i}>
               {cols.map((c) => (
                 <td key={c.key}>
-                  {c.render ? c.render(row[c.key], row) : (
+                  {c.render ? (
+                    <span title={row[c.key] ?? ""}>{c.render(row[c.key], row)}</span>
+                  ) : (
                     row[c.key] == null
                       ? <span style={{ color: "var(--text3)", fontStyle: "italic" }}>—</span>
-                      : String(row[c.key])
+                      : <span title={String(row[c.key])}>{String(row[c.key])}</span>
                   )}
                 </td>
               ))}
@@ -198,19 +200,14 @@ export default function AuditLogs() {
           {v || "—"}
         </span>
       )},
-      { key: "db_type",       label: "DB",      render: (v) => <span style={{ fontFamily: "monospace", fontSize: 11 }}>{v}</span> },
+      { key: "db_type",       label: "DB Profile",      render: (v, row) => <span style={{ fontFamily: "monospace", fontSize: 11 }}>{row.profile_name || v || "—"}</span> },
     ],
     tokens: [
-      { key: "used_at",       label: "Time",    render: (v) => <span style={{ color: "var(--text3)", fontSize: 12 }}>{fmt(v)}</span> },
-      { key: "token_name",    label: "Token",   render: (v) => <span style={{ fontFamily: "monospace", fontSize: 12 }}>{v || "—"}</span> },
-      { key: "endpoint",      label: "Endpoint",render: (v) => <span style={{ fontFamily: "monospace", fontSize: 11, color: "var(--text2)" }}>{v || "—"}</span> },
-      { key: "ip_address",    label: "IP",      render: (v) => <span style={{ fontFamily: "monospace", fontSize: 11, color: "var(--text3)" }}>{v || "—"}</span> },
-      { key: "status_code",   label: "HTTP",    render: (v) => (
-        <span style={{
-          fontFamily: "monospace", fontSize: 12,
-          color: v >= 400 ? "#f87171" : v >= 300 ? "#f59e0b" : "#4ade80",
-        }}>{v || "—"}</span>
-      )},
+      { key: "last_used_at",  label: "Time",    render: (v) => <span style={{ color: "var(--text3)", fontSize: 12 }}>{fmt(v)}</span> },
+      { key: "name",          label: "Token",   render: (v) => <span style={{ fontFamily: "monospace", fontSize: 12 }}>{v || "—"}</span> },
+      { key: "total_requests",label: "Requests",render: (v) => <span style={{ fontFamily: "monospace", fontSize: 11, color: "var(--text2)" }}>{v ?? "—"}</span> },
+      { key: "last_used_ip",  label: "IP",      render: (v) => <span style={{ fontFamily: "monospace", fontSize: 11, color: "var(--text3)" }}>{v || "—"}</span> },
+      { key: "status",        label: "Status",  render: (v) => <StatusBadge status={v} /> },
     ],
   };
 

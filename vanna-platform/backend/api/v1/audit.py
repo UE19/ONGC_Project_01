@@ -193,6 +193,16 @@ async def failed_queries(
     )
     result = await db.execute(stmt)
     items = result.scalars().all()
+    # Fetch profile names to display friendly profile names in the UI
+    profile_ids = {q.profile_id for q in items if getattr(q, "profile_id", None)}
+    profile_map = {}
+    if profile_ids:
+        prof_res = await db.execute(
+            select(ConnectionProfile.id, ConnectionProfile.profile_name).where(ConnectionProfile.id.in_(list(profile_ids)))
+        )
+        for pid, pname in prof_res.all():
+            profile_map[str(pid)] = pname
+
     return [
         {
             "id": str(q.id),
@@ -202,6 +212,8 @@ async def failed_queries(
             "error_message": q.error_message,
             "ip_address": q.ip_address,
             "db_type": q.db_type,
+            "profile_id": str(q.profile_id) if q.profile_id else None,
+            "profile_name": profile_map.get(str(q.profile_id)) if q.profile_id else None,
             "created_at": q.created_at.isoformat(),
         }
         for q in items

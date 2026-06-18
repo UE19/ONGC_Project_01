@@ -234,7 +234,7 @@ class Dashboard extends React.Component {
             <StatCard icon={Key}           label="Active Tokens"       value={stats.active_tokens ?? 0}          sub={`${stats.total_tokens ?? 0} total`}    accentColor="#f59e0b" />
             <StatCard icon={CheckCircle}   label="Success Rate"        value={`${stats.success_rate ?? 0}%`}                                                  accentColor="#22c55e" />
             <StatCard icon={AlertTriangle} label="Failed Queries"      value={stats.failed_queries ?? 0}                                                       accentColor="#f43f5e" />
-            <StatCard icon={Clock}         label="Avg Response"        value={`${stats.avg_response_time_ms ?? 0}ms`} sub="last 30 days"                      accentColor="#CC0000" />
+            <StatCard icon={Clock}         label="Avg Response Time"        value={`${stats.avg_response_time_ms ?? 0}ms`} sub="last 30 days"                      accentColor="#CC0000" />
             <StatCard icon={TrendingUp}    label="Total Queries"       value={stats.total_queries ?? 0}          sub="all time"                               accentColor="#CC0000" />
           </div>
 
