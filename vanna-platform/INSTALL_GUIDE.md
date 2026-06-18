@@ -207,7 +207,6 @@ docker run --rm python:3.11-alpine sh -c "pip install cryptography -q && python 
 ### Step 3: Start All Services
 
 ```bash
-cd "D:\ONGC RAM proj\vanna-platform"
 docker compose up -d
 ```
 
@@ -271,7 +270,7 @@ Default super admin credentials (change immediately):
 | Field | Value |
 |-------|-------|
 | Email | `admin@vanna-platform.local` |
-| Password | `ChangeMe@123` |
+| Password | `Admin@ONGC123` |
 
 **After first login:**
 1. Go to **Settings** → Change password immediately
