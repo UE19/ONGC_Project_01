@@ -23,8 +23,10 @@ class VannaServiceClient:
         schema_context: Optional[dict] = None,
     ) -> dict:
         """
+        Returns the generated SQL Query, its explanation and confidence.
         POST /generate-sql
         Returns: {sql, explanation, confidence}
+        Gets data from vanna-service.
         """
         async with httpx.AsyncClient(timeout=self.timeout) as client:
             resp = await client.post(

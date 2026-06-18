@@ -285,10 +285,12 @@ export default function SchemaManager() {
     Promise.allSettled([
       schemaAPI.getMetadata(selectedId),
       schemaAPI.listGlossary(selectedId),
-    ]).then(([tablesRes, glossaryRes]) => {
+    ])
+    .then(([tablesRes, glossaryRes]) => {
       if (tablesRes.status === "fulfilled") setMetadata(tablesRes.value.data || []);
       if (glossaryRes.status === "fulfilled") setGlossary(glossaryRes.value.data || []);
-    }).finally(() => setLoading(false));
+    })
+    .finally(() => setLoading(false));
   }, [selectedId]);
 
   useEffect(() => { loadData(); }, [loadData]);
