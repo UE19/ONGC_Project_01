@@ -113,7 +113,7 @@ services:
 
   mongodb:
     profiles:
-      - testing
+      - testings
     image: mongo:7
     container_name: vanna_mongodb
     environment:
@@ -155,7 +155,7 @@ services:
     expose:
       - "11434"
     volumes:
-      - ollama_data:/models
+      - ollama_data:/root/.ollama/models
     healthcheck:
       test: ["CMD-SHELL", "curl -fs http://localhost:11434/v1/models || exit 1"]
       interval: 15s
@@ -163,7 +163,20 @@ services:
       retries: 5
     networks:
       - vanna_net
+      - webollama-network
     restart: unless-stopped
+  webollama:
+    profiles:
+      - testings
+    image: ghcr.io/dkruyt/webollama:latest
+    container_name: webollama
+    environment:
+      - OLLAMA_API_BASE=http://ollama:11434
+    ports:
+      - "5000:5000"
+    restart: unless-stopped
+    networks:
+      - webollama-network
 
 volumes:
   postgres_data:
@@ -174,3 +187,4 @@ volumes:
 networks:
   vanna_net:
     driver: bridge
+  webollama-network:

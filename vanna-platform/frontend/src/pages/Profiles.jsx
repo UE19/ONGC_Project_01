@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import { createPortal } from "react-dom";
 import { profilesAPI } from "../services/api";
 import toast from "react-hot-toast";
 import {
@@ -19,6 +20,21 @@ const DB_COLORS = {
 };
 
 /* ── Profile Modal ── */
+function Field({ label, name, type = "text", required = true, span = 1, value, onChange }) {
+  return (
+    <div style={{ gridColumn: span === 2 ? "span 2" : "span 1" }}>
+      <label className="ongc-label">{label}{required && " *"}</label>
+      <input
+        className="ongc-input"
+        type={type}
+        required={required}
+        value={value || ""}
+        onChange={onChange}
+      />
+    </div>
+  );
+}
+
 function ProfileModal({ profile, onClose, onSave }) {
   const [form, setForm] = useState(profile ? { ...profile } : {
     profile_name: "", description: "", db_type: "postgresql", host: "", port: 5432,
@@ -48,18 +64,8 @@ function ProfileModal({ profile, onClose, onSave }) {
     }
   };
 
-  const Field = ({ label, name, type = "text", required = true, span = 1 }) => (
-    <div style={{ gridColumn: span === 2 ? "span 2" : "span 1" }}>
-      <label className="ongc-label">{label}{required && " *"}</label>
-      <input
-        className="ongc-input"
-        type={type}
-        required={required}
-        value={form[name] || ""}
-        onChange={(e) => set(name, type === "number" ? +e.target.value : e.target.value)}
-      />
-    </div>
-  );
+  // Field is now a top-level component to avoid remounting on each render and losing focus
+  // refer to L23-L36 for the new Field component definition
 
   return (
     <div className="modal-overlay">
@@ -94,7 +100,10 @@ function ProfileModal({ profile, onClose, onSave }) {
         <form onSubmit={handleSubmit} style={{ padding: "22px 24px" }}>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
 
-            <Field label="Profile Name" name="profile_name" span={2} />
+            <Field label="Profile Name" name="profile_name" span={2}
+              value={form.profile_name}
+              onChange={(e) => set("profile_name", e.target.value)}
+            />
 
             <div style={{ gridColumn: "span 2" }}>
               <label className="ongc-label">Description</label>
@@ -127,11 +136,26 @@ function ProfileModal({ profile, onClose, onSave }) {
               </select>
             </div>
 
-            <Field label="Host / IP Address" name="host" />
-            <Field label="Port" name="port" type="number" />
-            <Field label="Database Name" name="database_name" />
-            <Field label="Username" name="username" />
-            <Field label="Password" name="password" type="password" />
+            <Field label="Host / IP Address" name="host"
+              value={form.host}
+              onChange={(e) => set("host", e.target.value)}
+            />
+            <Field label="Port" name="port" type="number"
+              value={form.port}
+              onChange={(e) => set("port", e.target.value === "" ? "" : +e.target.value)}
+            />
+            <Field label="Database Name" name="database_name"
+              value={form.database_name}
+              onChange={(e) => set("database_name", e.target.value)}
+            />
+            <Field label="Username" name="username"
+              value={form.username}
+              onChange={(e) => set("username", e.target.value)}
+            />
+            <Field label="Password" name="password" type="password"
+              value={form.password}
+              onChange={(e) => set("password", e.target.value)}
+            />
           </div>
 
           {/* Read-only notice */}
@@ -161,6 +185,21 @@ function ProfileModal({ profile, onClose, onSave }) {
       </div>
     </div>
   );
+}
+
+function ModalPortal({ children }) {
+  const elRef = useRef(null);
+  if (!elRef.current) {
+    elRef.current = document.createElement("div");
+    elRef.current.className = "modal-portal";
+  }
+  useEffect(() => {
+    document.body.appendChild(elRef.current);
+    return () => {
+      if (elRef.current && elRef.current.parentNode) elRef.current.parentNode.removeChild(elRef.current);
+    };
+  }, []);
+  return createPortal(children, elRef.current);
 }
 
 /* ── Delete Confirm Modal ── */
@@ -471,7 +510,7 @@ export default function Profiles() {
                     key={p.id}
                     profile={p}
                     onTest={handleTest}
-                    onEdit={(prof) => setModal(prof)}
+                    onEdit={(prof) => setModal({ ...prof })}
                     onDelete={(prof) => setDeleteTarget(prof)}
                     testing={testing}
                   />
@@ -483,20 +522,24 @@ export default function Profiles() {
       )}
 
       {modal && (
-        <ProfileModal
-          profile={modal === "new" ? null : modal}
-          onClose={() => setModal(null)}
-          onSave={() => { setModal(null); load(); }}
-        />
+        <ModalPortal>
+          <ProfileModal
+            profile={modal === "new" ? null : modal}
+            onClose={() => setModal(null)}
+            onSave={() => { setModal(null); load(); }}
+          />
+        </ModalPortal>
       )}
 
       {deleteTarget && (
-        <DeleteModal
-          profile={deleteTarget}
-          onClose={() => setDeleteTarget(null)}
-          onConfirm={handleDelete}
-          deleting={deleting}
-        />
+        <ModalPortal>
+          <DeleteModal
+            profile={deleteTarget}
+            onClose={() => setDeleteTarget(null)}
+            onConfirm={handleDelete}
+            deleting={deleting}
+          />
+        </ModalPortal>
       )}
 
       <style>{`

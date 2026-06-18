@@ -353,6 +353,7 @@ class VannaEngine:
                         f"Results (first 5 rows): {results_preview}\n"
                         f"Total rows: {row_count}\n\n"
                         "Provide a brief plain-English summary of the results in 1-2 sentences."
+                        "Do not include any SQL or code in the summary, and do not explain the SQL query itself."
                     ),
                 }],
                 temperature=0.2,
