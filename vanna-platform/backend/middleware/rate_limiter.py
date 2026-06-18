@@ -5,6 +5,7 @@ Applies per-user rate limits and per-token rate limits.
 from fastapi import HTTPException, Request, status
 from core.redis_client import increment_rate_counter
 from core.config import settings
+from core.http import get_client_ip
 
 
 async def check_rate_limit(request: Request, identifier: str, limit: int, window: int = 60):
@@ -24,7 +25,7 @@ async def check_rate_limit(request: Request, identifier: str, limit: int, window
 
 async def check_ip_rate_limit(request: Request):
     """Apply a broad IP-level rate limit to public endpoints."""
-    ip = request.client.host if request.client else "unknown"
+    ip = get_client_ip(request) or "unknown"
     await check_rate_limit(request, f"ip:{ip}", limit=settings.RATE_LIMIT_PER_MINUTE)
 
 

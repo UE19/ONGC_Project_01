@@ -24,6 +24,7 @@ from models.user import User
 from schemas.query import GlossaryTermCreate, GlossaryTermResponse, SchemaIngestRequest
 from services.schema_ingestion import schema_ingestion_service
 from services.vanna_service import vanna_client
+from core.http import get_client_ip
 
 router = APIRouter(prefix="/schema", tags=["Schema Ingestion & Training"])
 
@@ -49,7 +50,7 @@ async def ingest_schema(
     )
     await log_event(db, AuditAction.SCHEMA_INGESTED, user_id=current_user.id,
                     resource_type="connection_profile", resource_id=str(profile_id),
-                    ip_address=request.client.host if request.client else None)
+                    ip_address=get_client_ip(request))
     return {"message": "Schema ingestion started", "profile_id": str(profile_id)}
 
 

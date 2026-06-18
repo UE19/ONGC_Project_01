@@ -25,9 +25,7 @@ from schemas.user import PasswordChange, TokenResponse, UserLogin, UserRegister,
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
-
-def _get_ip(request: Request) -> str:
-    return request.client.host if request.client else "unknown"
+from core.http import get_client_ip
 
 
 @router.post("/register", response_model=UserResponse, status_code=201)
@@ -50,7 +48,7 @@ async def register(body: UserRegister, request: Request, db: AsyncSession = Depe
     )
     db.add(user)
     await db.flush()
-    await log_event(db, AuditAction.USER_REGISTER, user_id=user.id, ip_address=_get_ip(request))
+    await log_event(db, AuditAction.USER_REGISTER, user_id=user.id, ip_address=get_client_ip(request))
     return user
 
 
@@ -61,14 +59,14 @@ async def login(body: UserLogin, request: Request, db: AsyncSession = Depends(ge
 
     if not user or not verify_password(body.password, user.hashed_password):
         await log_event(db, AuditAction.LOGIN_FAILED,
-                        ip_address=_get_ip(request), details={"email": body.email}, status="failure")
+                ip_address=get_client_ip(request), details={"email": body.email}, status="failure")
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
     if not user.is_active:
         raise HTTPException(status_code=403, detail="Account is deactivated")
 
     user.last_login = datetime.now(timezone.utc)
-    await log_event(db, AuditAction.USER_LOGIN, user_id=user.id, ip_address=_get_ip(request))
+    await log_event(db, AuditAction.USER_LOGIN, user_id=user.id, ip_address=get_client_ip(request))
 
     access_token = create_access_token({"sub": str(user.id), "role": user.role.value})
     refresh_token = create_refresh_token({"sub": str(user.id), "role": user.role.value})
@@ -104,7 +102,7 @@ async def refresh_token(request: Request, db: AsyncSession = Depends(get_db)):
 @router.post("/logout", status_code=204)
 async def logout(request: Request, db: AsyncSession = Depends(get_db)):
     # Blacklist handled at client side; audit the event
-    await log_event(db, AuditAction.USER_LOGOUT, ip_address=_get_ip(request))
+    await log_event(db, AuditAction.USER_LOGOUT, ip_address=get_client_ip(request))
     return
 
 
@@ -118,4 +116,4 @@ async def change_password(
     if not verify_password(body.current_password, current_user.hashed_password):
         raise HTTPException(status_code=400, detail="Current password is incorrect")
     current_user.hashed_password = hash_password(body.new_password)
-    await log_event(db, AuditAction.PASSWORD_CHANGED, user_id=current_user.id, ip_address=_get_ip(request))
+    await log_event(db, AuditAction.PASSWORD_CHANGED, user_id=current_user.id, ip_address=get_client_ip(request))

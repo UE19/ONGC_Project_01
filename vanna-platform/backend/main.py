@@ -13,6 +13,7 @@ from fastapi.responses import JSONResponse
 
 from core.config import settings
 from core.database import Base, engine
+from core.http import get_client_ip
 
 # Import all models so Alembic can detect them
 from models import *  # noqa
@@ -78,7 +79,7 @@ async def log_requests(request: Request, call_next):
         method=request.method,
         path=request.url.path,
         status=response.status_code,
-        ip=request.client.host if request.client else None,
+        ip=get_client_ip(request),
     )
     return response
 

@@ -26,6 +26,7 @@ from schemas.connection_profile import (
     ConnectionProfileCreate, ConnectionProfileResponse, ConnectionProfileUpdate, ConnectionTestResult
 )
 from services.db_connector import db_connector
+from core.http import get_client_ip
 
 router = APIRouter(prefix="/profiles", tags=["Connection Profiles"])
 
@@ -59,7 +60,7 @@ async def create_profile(
     await db.flush()
     await log_event(db, AuditAction.PROFILE_CREATED, user_id=current_user.id,
                     resource_type="connection_profile", resource_id=str(profile.id),
-                    ip_address=request.client.host if request.client else None)
+                    ip_address=get_client_ip(request))
     return profile
 
 
@@ -107,7 +108,7 @@ async def update_profile(
 
     await log_event(db, AuditAction.PROFILE_UPDATED, user_id=current_user.id,
                     resource_type="connection_profile", resource_id=str(profile_id),
-                    ip_address=request.client.host if request.client else None)
+                    ip_address=get_client_ip(request))
     return profile
 
 
@@ -122,7 +123,7 @@ async def delete_profile(
     await db.delete(profile)
     await log_event(db, AuditAction.PROFILE_DELETED, user_id=current_user.id,
                     resource_type="connection_profile", resource_id=str(profile_id),
-                    ip_address=request.client.host if request.client else None)
+                    ip_address=get_client_ip(request))
 
 
 @router.post("/{profile_id}/test", response_model=ConnectionTestResult)
@@ -142,7 +143,7 @@ async def test_profile(
     await log_event(db, AuditAction.PROFILE_TESTED, user_id=current_user.id,
                     resource_type="connection_profile", resource_id=str(profile_id),
                     details={"success": success, "message": message},
-                    ip_address=request.client.host if request.client else None)
+                    ip_address=get_client_ip(request))
 
     return ConnectionTestResult(success=success, message=message, latency_ms=latency)
 

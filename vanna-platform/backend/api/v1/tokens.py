@@ -29,6 +29,7 @@ from schemas.api_token import (
 )
 
 router = APIRouter(prefix="/tokens", tags=["API Token Management"])
+from core.http import get_client_ip
 
 
 @router.post("", response_model=APITokenCreatedResponse, status_code=201)
@@ -65,7 +66,7 @@ async def create_token(
 
     await log_event(db, AuditAction.TOKEN_CREATED, user_id=current_user.id,
                     resource_type="api_token", resource_id=str(token.id),
-                    ip_address=request.client.host if request.client else None,
+                    ip_address=get_client_ip(request),
                     details={"name": body.name, "profile_id": str(body.profile_id)})
 
     response = APITokenCreatedResponse.model_validate(token)
@@ -96,7 +97,7 @@ async def validate_token(
     """External apps use this to verify their token is still valid."""
     await log_event(db, AuditAction.TOKEN_VALIDATED, resource_type="api_token",
                     resource_id=str(api_token.id),
-                    ip_address=request.client.host if request.client else None)
+                    ip_address=get_client_ip(request))
     return TokenValidateResponse(
         valid=True,
         token_id=api_token.id,
@@ -143,7 +144,7 @@ async def revoke_token(
     token.revoked_at = datetime.now(timezone.utc)
     await log_event(db, AuditAction.TOKEN_REVOKED, user_id=current_user.id,
                     resource_type="api_token", resource_id=str(token_id),
-                    ip_address=request.client.host if request.client else None)
+                    ip_address=get_client_ip(request))
 
 
 @router.delete("/{token_id}", status_code=204)
@@ -157,7 +158,7 @@ async def delete_token(
     token = await _get_owned_token(token_id, current_user, db)
     await log_event(db, AuditAction.TOKEN_REVOKED, user_id=current_user.id,
                     resource_type="api_token", resource_id=str(token_id),
-                    ip_address=request.client.host if request.client else None,
+                    ip_address=get_client_ip(request),
                     details={"action": "deleted", "name": token.name})
     await db.delete(token)
 
@@ -193,7 +194,7 @@ async def rotate_token(
 
     await log_event(db, AuditAction.TOKEN_ROTATED, user_id=current_user.id,
                     resource_type="api_token", resource_id=str(new_token.id),
-                    ip_address=request.client.host if request.client else None)
+                    ip_address=get_client_ip(request))
 
     response = APITokenCreatedResponse.model_validate(new_token)
     response.raw_token = raw_token

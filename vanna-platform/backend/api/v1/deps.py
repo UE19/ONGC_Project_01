@@ -16,6 +16,7 @@ from models.api_token import APIToken, TokenStatus
 from models.user import User, UserRole
 
 from datetime import datetime, timezone
+from core.http import get_client_ip
 
 bearer_scheme = HTTPBearer(auto_error=False)
 
@@ -83,6 +84,6 @@ async def get_api_token(
     # Update usage tracking
     token.total_requests += 1
     token.last_used_at = datetime.now(timezone.utc)
-    token.last_used_ip = request.client.host if request.client else None
+    token.last_used_ip = get_client_ip(request)
 
     return token

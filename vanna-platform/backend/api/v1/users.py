@@ -19,6 +19,7 @@ from middleware.audit_middleware import log_event
 from models.audit_log import AuditAction
 from models.user import User, UserRole
 from schemas.user import UserResponse, UserUpdate
+from core.http import get_client_ip
 
 router = APIRouter(prefix="/users", tags=["User Management"])
 
@@ -72,7 +73,7 @@ async def update_user(
 
     await log_event(db, AuditAction.USER_UPDATED, user_id=current_admin.id,
                     resource_type="user", resource_id=str(user_id),
-                    ip_address=request.client.host if request.client else None)
+                    ip_address=get_client_ip(request))
     return user
 
 
@@ -90,4 +91,4 @@ async def deactivate_user(
     user.is_active = False
     await log_event(db, AuditAction.USER_DEACTIVATED, user_id=current_admin.id,
                     resource_type="user", resource_id=str(user_id),
-                    ip_address=request.client.host if request.client else None)
+                    ip_address=get_client_ip(request))

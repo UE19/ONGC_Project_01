@@ -26,6 +26,7 @@ from services.db_connector import db_connector
 from services.export_service import to_csv, to_excel
 from services.query_validator import sanitize_natural_language, validate_sql
 from services.vanna_service import vanna_client
+from core.http import get_client_ip
 
 router = APIRouter(prefix="/query", tags=["Query Engine"])
 
@@ -92,8 +93,8 @@ async def execute_query(
     if not is_valid:
         await _log_query(db, api_token, profile, question, generated_sql, "blocked", reason, request)
         await log_event(db, AuditAction.QUERY_BLOCKED, user_id=api_token.owner_id,
-                        details={"reason": reason, "sql": generated_sql},
-                        ip_address=request.client.host if request.client else None)
+                details={"reason": reason, "sql": generated_sql},
+                ip_address=get_client_ip(request))
         raise HTTPException(status_code=403, detail=f"Query blocked: {reason}")
 
     # ── Execute query ─────────────────────────────────────────────────────────
@@ -104,8 +105,8 @@ async def execute_query(
     except Exception as e:
         await _log_query(db, api_token, profile, question, generated_sql, "failed", str(e), request)
         await log_event(db, AuditAction.QUERY_FAILED, user_id=api_token.owner_id,
-                        details={"error": str(e)},
-                        ip_address=request.client.host if request.client else None)
+                details={"error": str(e)},
+                ip_address=get_client_ip(request))
         raise HTTPException(status_code=500, detail=f"Query execution failed: {str(e)}")
 
     # ── Generate summary ──────────────────────────────────────────────────────
@@ -128,7 +129,7 @@ async def execute_query(
     )
     await log_event(db, AuditAction.QUERY_EXECUTED, user_id=api_token.owner_id,
                     resource_type="query", resource_id=str(query_id),
-                    ip_address=request.client.host if request.client else None)
+                    ip_address=get_client_ip(request))
 
     return QueryResponse(
         query_id=query_id,
@@ -224,7 +225,7 @@ async def _log_query(db, api_token, profile, question, sql, status, error, reque
         error_message=error,
         row_count=row_count,
         execution_time_ms=execution_time_ms,
-        ip_address=request.client.host if request.client else None,
+        ip_address=get_client_ip(request),
         user_agent=request.headers.get("User-Agent"),
         db_type=profile.db_type.value,
     )

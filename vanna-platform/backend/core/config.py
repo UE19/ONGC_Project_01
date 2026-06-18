@@ -33,10 +33,20 @@ class Settings(BaseSettings):
     # Environment
     ENVIRONMENT: str = "production"
     LOG_LEVEL: str = "INFO"
+    
+    # Trusting proxy headers (X-Forwarded-For)
+    TRUST_X_FORWARDED: bool = False
+    TRUSTED_PROXIES: str = ""  # comma-separated list of trusted proxy IPs
+
 
     @property
     def cors_origins_list(self) -> List[str]:
         return [o.strip() for o in self.CORS_ORIGINS.split(",")]
+
+    @property
+    def trusted_proxies_list(self) -> List[str]:
+        raw = (self.TRUSTED_PROXIES or "").strip()
+        return [p.strip() for p in raw.split(",") if p.strip()]
 
     class Config:
         env_file = ".env"
