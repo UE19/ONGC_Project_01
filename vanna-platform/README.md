@@ -86,7 +86,11 @@ alembic upgrade head
 - For significant changes, open an issue first to discuss design.
 
 **License & Credits**
-This project includes independent components and dependencies; review each `requirements.txt` for licensing details. Add a project license file if required.
+This project includes independent components and dependencies; review each `requirements.txt` for licensing details.
 
 **Contact / Support**
 For questions or issues, open an issue in the repository or contact the maintainers.
+
+1. Utkarsh Ekka (Summer Intern 2026 at Infocom Services,ONGC)
+2. V.Karthikeyan (Summer Intern 2026 at Infocom Services,ONGC)
+3. Sri Abirami (Summer Intern 2026 at Infocom Services,ONGC)
