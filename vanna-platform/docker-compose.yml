@@ -148,8 +148,6 @@ services:
     restart: unless-stopped
     
   ollama:
-    profiles:
-      - testing
     image: ollama/ollama:latest
     container_name: vanna_ollama
     expose:

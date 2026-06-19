@@ -1,38 +1,37 @@
 -- MS SQL Server adaptation of SampleDB.sql
 -- Notes: kept types (`DATETIME`) as-is; added `GO` batch separators after major object creation blocks.
 
--- Tables: Assets, RefineryUnits, ProductionLogs
-CREATE TABLE Assets (
-    AssetID INT PRIMARY KEY,
-    AssetName VARCHAR(100) NOT NULL,
-    Location VARCHAR(100) NOT NULL,
-    Region VARCHAR(50) NOT NULL
+CREATE TABLE assets (
+    asset_id INT PRIMARY KEY,
+    asset_name VARCHAR(100) NOT NULL,
+    location VARCHAR(100) NOT NULL,
+    region VARCHAR(50) NOT NULL
 );
 GO
 
-CREATE TABLE RefineryUnits (
-    UnitID INT PRIMARY KEY,
-    AssetID INT,
-    UnitName VARCHAR(100) NOT NULL,
-    DesignCapacity_BPD INT NOT NULL,
-    PrimaryProduct VARCHAR(50),
-    FOREIGN KEY (AssetID) REFERENCES Assets(AssetID)
+CREATE TABLE refinery_units (
+    unit_id INT PRIMARY KEY,
+    asset_id INT,
+    unit_name VARCHAR(100) NOT NULL,
+    design_capacity_bpd INT NOT NULL,
+    primary_product VARCHAR(50),
+    FOREIGN KEY (asset_id) REFERENCES assets(asset_id)
 );
 GO
 
-CREATE TABLE ProductionLogs (
-    LogID INT PRIMARY KEY,
-    UnitID INT,
-    ProductionDate DATE NOT NULL,
-    ProductType VARCHAR(50) NOT NULL,
-    ActualVolume_BPD DECIMAL(10, 2) NOT NULL,
-    EfficiencyPercentage DECIMAL(5, 2),
-    FOREIGN KEY (UnitID) REFERENCES RefineryUnits(UnitID)
+CREATE TABLE production_logs (
+    log_id INT PRIMARY KEY,
+    unit_id INT,
+    production_date DATE NOT NULL,
+    product_type VARCHAR(50) NOT NULL,
+    actual_volume_bpd DECIMAL(10, 2) NOT NULL,
+    efficiency_percentage DECIMAL(5, 2),
+    FOREIGN KEY (unit_id) REFERENCES refinery_units(unit_id)
 );
 GO
 
--- Inserting Data into Assets
-INSERT INTO Assets (AssetID, AssetName, Location, Region) VALUES
+-- Inserting Data into assets
+INSERT INTO assets (asset_id, asset_name, location, region) VALUES
 (1, 'Cauvery Asset', 'Karaikal', 'Southern'),
 (2, 'Mumbai High Asset', 'Mumbai Offshore', 'Western offshore'),
 (3, 'Ahmedabad Asset', 'Ahmedabad', 'Western onshore'),
@@ -40,8 +39,8 @@ INSERT INTO Assets (AssetID, AssetName, Location, Region) VALUES
 (5, 'Assam Asset', 'Sivasagar', 'Eastern');
 GO
 
--- Inserting Data into Refinery Units
-INSERT INTO RefineryUnits (UnitID, AssetID, UnitName, DesignCapacity_BPD, PrimaryProduct) VALUES
+-- Inserting Data into refinery_units
+INSERT INTO refinery_units (unit_id, asset_id, unit_name, design_capacity_bpd, primary_product) VALUES
 (101, 1, 'Karaikal Mini Refinery', 10000, 'Crude Oil'),
 (102, 1, 'Nagapattinam GPP', 5000, 'Natural Gas'),
 (103, 2, 'Uran LPG Plant', 45000, 'LPG'),
@@ -51,8 +50,8 @@ INSERT INTO RefineryUnits (UnitID, AssetID, UnitName, DesignCapacity_BPD, Primar
 (107, 5, 'Sibsagar GGS', 15000, 'Crude Oil');
 GO
 
--- Inserting Production Logs (75 entries matching ONGC Asset operations)
-INSERT INTO ProductionLogs (LogID, UnitID, ProductionDate, ProductType, ActualVolume_BPD, EfficiencyPercentage) VALUES
+(-- Inserting Production Logs (75 entries matching ONGC Asset operations)
+INSERT INTO production_logs (log_id, unit_id, production_date, product_type, actual_volume_bpd, efficiency_percentage) VALUES
 (1, 101, '2026-05-01', 'Crude Oil', 9760.64, 97.61),
 (2, 101, '2026-05-01', 'Crude Oil', 8659.28, 86.59),
 (3, 107, '2026-05-01', 'Crude Oil', 14684.96, 97.9),
@@ -132,93 +131,93 @@ GO
 
 GO
 
-CREATE TABLE CrudeAssays (
-    AssayID INT PRIMARY KEY,
-    CrudeName VARCHAR(100) NOT NULL,
-    APIGravity DECIMAL(4,1),
-    SulfurPercentage DECIMAL(4,2),
-    Viscosity_cSt DECIMAL(4,1),
-    PourPoint_C DECIMAL(4,1)
+CREATE TABLE crude_assays (
+    assay_id INT PRIMARY KEY,
+    crude_name VARCHAR(100) NOT NULL,
+    api_gravity DECIMAL(4,1),
+    sulfur_percentage DECIMAL(4,2),
+    viscosity_cst DECIMAL(4,1),
+    pour_point_c DECIMAL(4,1)
 );
 GO
 
-CREATE TABLE Pipelines (
-    PipelineID INT PRIMARY KEY,
-    SourceAssetID INT,
-    DestinationUnitID INT,
-    PipelineName VARCHAR(100) NOT NULL,
-    Length_KM DECIMAL(6,2),
-    FOREIGN KEY (SourceAssetID) REFERENCES Assets(AssetID),
-    FOREIGN KEY (DestinationUnitID) REFERENCES RefineryUnits(UnitID)
+CREATE TABLE pipelines (
+    pipeline_id INT PRIMARY KEY,
+    source_asset_id INT,
+    destination_unit_id INT,
+    pipeline_name VARCHAR(100) NOT NULL,
+    length_km DECIMAL(6,2),
+    FOREIGN KEY (source_asset_id) REFERENCES assets(asset_id),
+    FOREIGN KEY (destination_unit_id) REFERENCES refinery_units(unit_id)
 );
 GO
 
-CREATE TABLE PipelineMetrics (
-    MetricID INT PRIMARY KEY,
-    PipelineID INT,
-    Timestamp DATETIME NOT NULL,
-    FlowRate_M3H DECIMAL(10,2),
-    Pressure_Bar DECIMAL(6,2),
-    Temperature_C DECIMAL(4,1),
-    FOREIGN KEY (PipelineID) REFERENCES Pipelines(PipelineID)
+CREATE TABLE pipeline_metrics (
+    metric_id INT PRIMARY KEY,
+    pipeline_id INT,
+    timestamp DATETIME NOT NULL,
+    flow_rate_m3h DECIMAL(10,2),
+    pressure_bar DECIMAL(6,2),
+    temperature_c DECIMAL(4,1),
+    FOREIGN KEY (pipeline_id) REFERENCES pipelines(pipeline_id)
 );
 GO
 
-CREATE TABLE WeeklyInventoryRecords (
-    InventoryID INT PRIMARY KEY,
-    UnitID INT,
-    RecordDate DATE NOT NULL,
-    ProductType VARCHAR(50) NOT NULL,
-    CurrentStock_Bbls DECIMAL(12,2),
-    MaxCapacity_Bbls DECIMAL(12,2),
-    FOREIGN KEY (UnitID) REFERENCES RefineryUnits(UnitID)
+CREATE TABLE weekly_inventory_records (
+    inventory_id INT PRIMARY KEY,
+    unit_id INT,
+    record_date DATE NOT NULL,
+    product_type VARCHAR(50) NOT NULL,
+    current_stock_bbls DECIMAL(12,2),
+    max_capacity_bbls DECIMAL(12,2),
+    FOREIGN KEY (unit_id) REFERENCES refinery_units(unit_id)
 );
 GO
 
-CREATE TABLE AssetIntegrityLogs (
-    LogID INT PRIMARY KEY,
-    UnitID INT,
-    InspectionDate DATE NOT NULL,
-    ComponentName VARCHAR(100) NOT NULL,
-    CorrosionRate_MMPY DECIMAL(5,3),
-    WallThickness_MM DECIMAL(5,2),
-    Status VARCHAR(25),
-    FOREIGN KEY (UnitID) REFERENCES RefineryUnits(UnitID)
+CREATE TABLE asset_integrity_logs (
+    log_id INT PRIMARY KEY,
+    unit_id INT,
+    inspection_date DATE NOT NULL,
+    component_name VARCHAR(100) NOT NULL,
+    corrosion_rate_mmpy DECIMAL(5,3),
+    wall_thickness_mm DECIMAL(5,2),
+    status VARCHAR(25),
+    FOREIGN KEY (unit_id) REFERENCES refinery_units(unit_id)
 );
 GO
 
-CREATE TABLE RefineryUtilizationMetrics (
-    UtilizationID INT PRIMARY KEY,
-    UnitID INT,
-    MetricDate DATE NOT NULL,
-    DesignCapacity_BPD INT,
-    ActualThroughput_BPD DECIMAL(10,2),
-    UtilizationPercentage DECIMAL(5,2),
-    FOREIGN KEY (UnitID) REFERENCES RefineryUnits(UnitID)
+CREATE TABLE refinery_utilization_metrics (
+    utilization_id INT PRIMARY KEY,
+    unit_id INT,
+    metric_date DATE NOT NULL,
+    design_capacity_bpd INT,
+    actual_throughput_bpd DECIMAL(10,2),
+    utilization_percentage DECIMAL(5,2),
+    FOREIGN KEY (unit_id) REFERENCES refinery_units(unit_id)
 );
 GO
 
-CREATE TABLE SupplyDemandDynamics (
-    DynamicsID INT PRIMARY KEY,
-    ProductType VARCHAR(50) NOT NULL,
-    RecordDate DATE NOT NULL,
-    Region VARCHAR(50) NOT NULL,
-    ProjectedDemand_BPD DECIMAL(12,2),
-    ActualSupply_BPD DECIMAL(12,2),
-    VolumetricVariance_BPD DECIMAL(12,2)
+CREATE TABLE supply_demand_dynamics (
+    dynamics_id INT PRIMARY KEY,
+    product_type VARCHAR(50) NOT NULL,
+    record_date DATE NOT NULL,
+    region VARCHAR(50) NOT NULL,
+    projected_demand_bpd DECIMAL(12,2),
+    actual_supply_bpd DECIMAL(12,2),
+    volumetric_variance_bpd DECIMAL(12,2)
 );
 GO
 
--- Inserting Data into Crude Assays
-INSERT INTO CrudeAssays (AssayID, CrudeName, APIGravity, SulfurPercentage, Viscosity_cSt, PourPoint_C) VALUES
+-- Inserting Data into crude_assays
+INSERT INTO crude_assays (assay_id, crude_name, api_gravity, sulfur_percentage, viscosity_cst, pour_point_c) VALUES
 (1, 'Mumbai High Crude', 38.2, 0.21, 4.5, 30.0),
 (2, 'Cauvery Basin Crude', 34.5, 0.45, 5.2, 21.0),
 (3, 'Assam Mix Crude', 32.1, 0.35, 6.8, 27.0),
 (4, 'Cambay Sweet Crude', 41.0, 0.12, 3.1, 18.0);
 GO
 
--- Inserting Data into Pipelines
-INSERT INTO Pipelines (PipelineID, SourceAssetID, DestinationUnitID, PipelineName, Length_KM) VALUES
+-- Inserting Data into pipelines
+INSERT INTO pipelines (pipeline_id, source_asset_id, destination_unit_id, pipeline_name, length_km) VALUES
 (201, 1, 101, 'Karaikal-MRL Trunkline', 45.50),
 (202, 2, 103, 'Mumbai High-Uran Subsea Pipeline', 210.00),
 (203, 2, 104, 'South Basin-Hazira Gas Line', 240.20),
@@ -226,8 +225,8 @@ INSERT INTO Pipelines (PipelineID, SourceAssetID, DestinationUnitID, PipelineNam
 (205, 5, 107, 'Sibsagar Field Pipeline', 35.10);
 GO
 
--- Inserting Pipeline Flow & Pressure Metrics (>50 rows)
-INSERT INTO PipelineMetrics (MetricID, PipelineID, Timestamp, FlowRate_M3H, Pressure_Bar, Temperature_C) VALUES
+(-- Inserting Pipeline Flow & Pressure Metrics (>50 rows)
+INSERT INTO pipeline_metrics (metric_id, pipeline_id, timestamp, flow_rate_m3h, pressure_bar, temperature_c) VALUES
 (1, 203, '2026-06-25 00:00:00', 1198.85, 78.71, 33.6),
 (2, 203, '2026-06-25 00:00:00', 606.31, 57.07, 36.6),
 (3, 203, '2026-05-02 00:00:00', 448.97, 60.02, 35.1),
@@ -296,7 +295,7 @@ INSERT INTO PipelineMetrics (MetricID, PipelineID, Timestamp, FlowRate_M3H, Pres
 GO
 
 -- Inserting Weekly Inventory Records (>50 rows)
-INSERT INTO WeeklyInventoryRecords (InventoryID, UnitID, RecordDate, ProductType, CurrentStock_Bbls, MaxCapacity_Bbls) VALUES
+INSERT INTO weekly_inventory_records (inventory_id, unit_id, record_date, product_type, current_stock_bbls, max_capacity_bbls) VALUES
 (1, 101, '2026-05-01', 'Crude Oil', 46399.71, 70000.00),
 (2, 102, '2026-05-01', 'Natural Gas', 23419.82, 35000.00),
 (3, 103, '2026-05-01', 'LPG', 198275.52, 315000.00),
@@ -363,7 +362,7 @@ INSERT INTO WeeklyInventoryRecords (InventoryID, UnitID, RecordDate, ProductType
 GO
 
 -- Inserting Asset Integrity Logs (>50 rows)
-INSERT INTO AssetIntegrityLogs (LogID, UnitID, InspectionDate, ComponentName, CorrosionRate_MMPY, WallThickness_MM, Status) VALUES
+INSERT INTO asset_integrity_logs (log_id, unit_id, inspection_date, component_name, corrosion_rate_mmpy, wall_thickness_mm, status) VALUES
 (1, 103, '2026-05-10', 'Crude Feed Pump', 0.284, 15.65, 'Action Required'),
 (2, 101, '2026-06-13', 'Boiler Unit B-1', 0.081, 34.02, 'Pass'),
 (3, 104, '2026-05-24', 'Storage Tank T-405', 0.170, 41.51, 'Pass'),
@@ -423,8 +422,7 @@ INSERT INTO AssetIntegrityLogs (LogID, UnitID, InspectionDate, ComponentName, Co
 (57, 105, '2026-05-09', 'Main Distillation Column', 0.088, 30.12, 'Pass');
 GO
 
--- Inserting Refinery Capacity/Utilization Metrics (>50 rows)
-INSERT INTO RefineryUtilizationMetrics (UtilizationID, UnitID, MetricDate, DesignCapacity_BPD, ActualThroughput_BPD, UtilizationPercentage) VALUES
+INSERT INTO refinery_utilization_metrics (utilization_id, unit_id, metric_date, design_capacity_bpd, actual_throughput_bpd, utilization_percentage) VALUES
 (1, 106, '2026-06-11', 8000, 7120.40, 89.01),
 (2, 106, '2026-06-17', 8000, 8140.50, 101.76),
 (3, 106, '2026-05-17', 8000, 7312.11, 91.40),
@@ -497,8 +495,7 @@ INSERT INTO RefineryUtilizationMetrics (UtilizationID, UnitID, MetricDate, Desig
 (70, 106, '2026-05-21', 8000, 7124.62, 89.06);
 GO
 
--- Inserting Product Supply and Demand Dynamics (>50 rows)
-INSERT INTO SupplyDemandDynamics (DynamicsID, ProductType, RecordDate, Region, ProjectedDemand_BPD, ActualSupply_BPD, VolumetricVariance_BPD) VALUES
+INSERT INTO supply_demand_dynamics (dynamics_id, product_type, record_date, region, projected_demand_bpd, actual_supply_bpd, volumetric_variance_bpd) VALUES
 (1, 'LPG', '2026-06-15', 'Southern Region', 145026.06, 147814.73, 2788.67),
 (2, 'LPG', '2026-06-03', 'Eastern Region', 139148.56, 143585.34, 4436.78),
 (3, 'Natural Gas', '2026-06-17', 'Western Region', 158784.84, 151590.31, -7194.53),

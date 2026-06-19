@@ -2,49 +2,49 @@
 // This script creates collections and inserts representative documents.
 
 // Assets collection
-db.Assets.insertMany([
-  {_id: 1, AssetName: 'Cauvery Asset', Location: 'Karaikal', Region: 'Southern'},
-  {_id: 2, AssetName: 'Mumbai High Asset', Location: 'Mumbai Offshore', Region: 'Western offshore'},
-  {_id: 3, AssetName: 'Ahmedabad Asset', Location: 'Ahmedabad', Region: 'Western onshore'},
-  {_id: 4, AssetName: 'Rajahmundry Asset', Location: 'Rajahmundry', Region: 'Southern'},
-  {_id: 5, AssetName: 'Assam Asset', Location: 'Sivasagar', Region: 'Eastern'}
+db.assets.insertMany([
+  {_id: 1, asset_name: 'Cauvery Asset', location: 'Karaikal', region: 'Southern'},
+  {_id: 2, asset_name: 'Mumbai High Asset', location: 'Mumbai Offshore', region: 'Western offshore'},
+  {_id: 3, asset_name: 'Ahmedabad Asset', location: 'Ahmedabad', region: 'Western onshore'},
+  {_id: 4, asset_name: 'Rajahmundry Asset', location: 'Rajahmundry', region: 'Southern'},
+  {_id: 5, asset_name: 'Assam Asset', location: 'Sivasagar', region: 'Eastern'}
 ]);
 
-// RefineryUnits collection
- db.RefineryUnits.insertMany([
-  {_id: 101, AssetID: 1, UnitName: 'Karaikal Mini Refinery', DesignCapacity_BPD: 10000, PrimaryProduct: 'Crude Oil'},
-  {_id: 102, AssetID: 1, UnitName: 'Nagapattinam GPP', DesignCapacity_BPD: 5000, PrimaryProduct: 'Natural Gas'},
-  {_id: 103, AssetID: 2, UnitName: 'Uran LPG Plant', DesignCapacity_BPD: 45000, PrimaryProduct: 'LPG'},
-  {_id: 104, AssetID: 2, UnitName: 'Hazira Gas Processing Plant', DesignCapacity_BPD: 60000, PrimaryProduct: 'Natural Gas'},
-  {_id: 105, AssetID: 3, UnitName: 'Nawagam CPF', DesignCapacity_BPD: 25000, PrimaryProduct: 'Crude Oil'},
-  {_id: 106, AssetID: 4, UnitName: 'Tatipaka Mini Refinery', DesignCapacity_BPD: 8000, PrimaryProduct: 'Crude Oil'},
-  {_id: 107, AssetID: 5, UnitName: 'Sibsagar GGS', DesignCapacity_BPD: 15000, PrimaryProduct: 'Crude Oil'}
+// Refinery units collection
+ db.refinery_units.insertMany([
+  {_id: 101, asset_id: 1, unit_name: 'Karaikal Mini Refinery', design_capacity_bpd: 10000, primary_product: 'Crude Oil'},
+  {_id: 102, asset_id: 1, unit_name: 'Nagapattinam GPP', design_capacity_bpd: 5000, primary_product: 'Natural Gas'},
+  {_id: 103, asset_id: 2, unit_name: 'Uran LPG Plant', design_capacity_bpd: 45000, primary_product: 'LPG'},
+  {_id: 104, asset_id: 2, unit_name: 'Hazira Gas Processing Plant', design_capacity_bpd: 60000, primary_product: 'Natural Gas'},
+  {_id: 105, asset_id: 3, unit_name: 'Nawagam CPF', design_capacity_bpd: 25000, primary_product: 'Crude Oil'},
+  {_id: 106, asset_id: 4, unit_name: 'Tatipaka Mini Refinery', design_capacity_bpd: 8000, primary_product: 'Crude Oil'},
+  {_id: 107, asset_id: 5, unit_name: 'Sibsagar GGS', design_capacity_bpd: 15000, primary_product: 'Crude Oil'}
 ]);
 
-// CrudeAssays collection
- db.CrudeAssays.insertMany([
-  {_id: 1, CrudeName: 'Mumbai High Crude', APIGravity: 38.2, SulfurPercentage: 0.21, Viscosity_cSt: 4.5, PourPoint_C: 30.0},
-  {_id: 2, CrudeName: 'Cauvery Basin Crude', APIGravity: 34.5, SulfurPercentage: 0.45, Viscosity_cSt: 5.2, PourPoint_C: 21.0},
-  {_id: 3, CrudeName: 'Assam Mix Crude', APIGravity: 32.1, SulfurPercentage: 0.35, Viscosity_cSt: 6.8, PourPoint_C: 27.0},
-  {_id: 4, CrudeName: 'Cambay Sweet Crude', APIGravity: 41.0, SulfurPercentage: 0.12, Viscosity_cSt: 3.1, PourPoint_C: 18.0}
+// Crude assays collection
+ db.crude_assays.insertMany([
+  {_id: 1, crude_name: 'Mumbai High Crude', api_gravity: 38.2, sulfur_percentage: 0.21, viscosity_cst: 4.5, pour_point_c: 30.0},
+  {_id: 2, crude_name: 'Cauvery Basin Crude', api_gravity: 34.5, sulfur_percentage: 0.45, viscosity_cst: 5.2, pour_point_c: 21.0},
+  {_id: 3, crude_name: 'Assam Mix Crude', api_gravity: 32.1, sulfur_percentage: 0.35, viscosity_cst: 6.8, pour_point_c: 27.0},
+  {_id: 4, crude_name: 'Cambay Sweet Crude', api_gravity: 41.0, sulfur_percentage: 0.12, viscosity_cst: 3.1, pour_point_c: 18.0}
 ]);
 
 // Pipelines collection
- db.Pipelines.insertMany([
-  {_id: 201, SourceAssetID: 1, DestinationUnitID: 101, PipelineName: 'Karaikal-MRL Trunkline', Length_KM: 45.5},
-  {_id: 202, SourceAssetID: 2, DestinationUnitID: 103, PipelineName: 'Mumbai High-Uran Subsea Pipeline', Length_KM: 210.0},
-  {_id: 203, SourceAssetID: 2, DestinationUnitID: 104, PipelineName: 'South Basin-Hazira Gas Line', Length_KM: 240.2},
-  {_id: 204, SourceAssetID: 3, DestinationUnitID: 105, PipelineName: 'Nawagam-Ahmedabad Feeder', Length_KM: 18.0},
-  {_id: 205, SourceAssetID: 5, DestinationUnitID: 107, PipelineName: 'Sibsagar Field Pipeline', Length_KM: 35.1}
+ db.pipelines.insertMany([
+  {_id: 201, source_asset_id: 1, destination_unit_id: 101, pipeline_name: 'Karaikal-MRL Trunkline', length_km: 45.5},
+  {_id: 202, source_asset_id: 2, destination_unit_id: 103, pipeline_name: 'Mumbai High-Uran Subsea Pipeline', length_km: 210.0},
+  {_id: 203, source_asset_id: 2, destination_unit_id: 104, pipeline_name: 'South Basin-Hazira Gas Line', length_km: 240.2},
+  {_id: 204, source_asset_id: 3, destination_unit_id: 105, pipeline_name: 'Nawagam-Ahmedabad Feeder', length_km: 18.0},
+  {_id: 205, source_asset_id: 5, destination_unit_id: 107, pipeline_name: 'Sibsagar Field Pipeline', length_km: 35.1}
 ]);
 
-// ProductionLogs collection (full dataset)
- db.ProductionLogs.insertMany([
-  {_id: 1, UnitID: 101, ProductionDate: ISODate('2026-05-01T00:00:00Z'), ProductType: 'Crude Oil', ActualVolume_BPD: 9760.64, EfficiencyPercentage: 97.61},
-  {_id: 2, UnitID: 101, ProductionDate: ISODate('2026-05-01T00:00:00Z'), ProductType: 'Crude Oil', ActualVolume_BPD: 8659.28, EfficiencyPercentage: 86.59},
-  {_id: 3, UnitID: 107, ProductionDate: ISODate('2026-05-01T00:00:00Z'), ProductType: 'Crude Oil', ActualVolume_BPD: 14684.96, EfficiencyPercentage: 97.90},
-  {_id: 4, UnitID: 107, ProductionDate: ISODate('2026-05-02T00:00:00Z'), ProductType: 'Crude Oil', ActualVolume_BPD: 14945.81, EfficiencyPercentage: 99.64},
-  {_id: 5, UnitID: 105, ProductionDate: ISODate('2026-05-03T00:00:00Z'), ProductType: 'Crude Oil', ActualVolume_BPD: 23759.59, EfficiencyPercentage: 95.04},
+// Production logs collection (full dataset)
+ db.production_logs.insertMany([
+  {_id: 1, unit_id: 101, production_date: ISODate('2026-05-01T00:00:00Z'), product_type: 'Crude Oil', actual_volume_bpd: 9760.64, efficiency_percentage: 97.61},
+  {_id: 2, unit_id: 101, production_date: ISODate('2026-05-01T00:00:00Z'), product_type: 'Crude Oil', actual_volume_bpd: 8659.28, efficiency_percentage: 86.59},
+  {_id: 3, unit_id: 107, production_date: ISODate('2026-05-01T00:00:00Z'), product_type: 'Crude Oil', actual_volume_bpd: 14684.96, efficiency_percentage: 97.90},
+  {_id: 4, unit_id: 107, production_date: ISODate('2026-05-02T00:00:00Z'), product_type: 'Crude Oil', actual_volume_bpd: 14945.81, efficiency_percentage: 99.64},
+  {_id: 5, unit_id: 105, production_date: ISODate('2026-05-03T00:00:00Z'), product_type: 'Crude Oil', actual_volume_bpd: 23759.59, efficiency_percentage: 95.04},
   {_id: 6, UnitID: 103, ProductionDate: ISODate('2026-05-03T00:00:00Z'), ProductType: 'LPG', ActualVolume_BPD: 44793.18, EfficiencyPercentage: 99.54},
   {_id: 7, UnitID: 101, ProductionDate: ISODate('2026-05-03T00:00:00Z'), ProductType: 'Crude Oil', ActualVolume_BPD: 9744.24, EfficiencyPercentage: 97.44},
   {_id: 8, UnitID: 107, ProductionDate: ISODate('2026-05-03T00:00:00Z'), ProductType: 'Crude Oil', ActualVolume_BPD: 15243.86, EfficiencyPercentage: 101.63},
@@ -117,11 +117,11 @@ db.Assets.insertMany([
   {_id: 75, UnitID: 105, ProductionDate: ISODate('2026-05-30T00:00:00Z'), ProductType: 'Crude Oil', ActualVolume_BPD: 21252.43, EfficiencyPercentage: 85.01}
 ]);
 
-// PipelineMetrics collection (timestamps use ISODate) - full dataset
- db.PipelineMetrics.insertMany([
-  {_id: 1, PipelineID: 203, Timestamp: ISODate('2026-06-25T00:00:00Z'), FlowRate_M3H: 1198.85, Pressure_Bar: 78.71, Temperature_C: 33.6},
-  {_id: 2, PipelineID: 203, Timestamp: ISODate('2026-06-25T00:00:00Z'), FlowRate_M3H: 606.31, Pressure_Bar: 57.07, Temperature_C: 36.6},
-  {_id: 3, PipelineID: 203, Timestamp: ISODate('2026-05-02T00:00:00Z'), FlowRate_M3H: 448.97, Pressure_Bar: 60.02, Temperature_C: 35.1},
+// Pipeline metrics collection (timestamps use ISODate) - full dataset
+ db.pipeline_metrics.insertMany([
+  {_id: 1, pipeline_id: 203, timestamp: ISODate('2026-06-25T00:00:00Z'), flow_rate_m3h: 1198.85, pressure_bar: 78.71, temperature_c: 33.6},
+  {_id: 2, pipeline_id: 203, timestamp: ISODate('2026-06-25T00:00:00Z'), flow_rate_m3h: 606.31, pressure_bar: 57.07, temperature_c: 36.6},
+  {_id: 3, pipeline_id: 203, timestamp: ISODate('2026-05-02T00:00:00Z'), flow_rate_m3h: 448.97, pressure_bar: 60.02, temperature_c: 35.1},
   {_id: 4, PipelineID: 205, Timestamp: ISODate('2026-05-14T00:00:00Z'), FlowRate_M3H: 761.12, Pressure_Bar: 69.94, Temperature_C: 31.4},
   {_id: 5, PipelineID: 204, Timestamp: ISODate('2026-05-14T00:00:00Z'), FlowRate_M3H: 934.85, Pressure_Bar: 87.43, Temperature_C: 37.1},
   {_id: 6, PipelineID: 205, Timestamp: ISODate('2026-05-15T00:00:00Z'), FlowRate_M3H: 870.64, Pressure_Bar: 45.99, Temperature_C: 35.3},
@@ -186,13 +186,13 @@ db.Assets.insertMany([
   {_id: 65, PipelineID: 205, Timestamp: ISODate('2026-06-21T00:00:00Z'), FlowRate_M3H: 740.11, Pressure_Bar: 60.39, Temperature_C: 37.4}
 ]);
 
-// WeeklyInventoryRecords (full dataset)
- db.WeeklyInventoryRecords.insertMany([
-  {_id: 1, UnitID: 101, RecordDate: ISODate('2026-05-01T00:00:00Z'), ProductType: 'Crude Oil', CurrentStock_Bbls: 46399.71, MaxCapacity_Bbls: 70000.00},
-  {_id: 2, UnitID: 102, RecordDate: ISODate('2026-05-01T00:00:00Z'), ProductType: 'Natural Gas', CurrentStock_Bbls: 23419.82, MaxCapacity_Bbls: 35000.00},
-  {_id: 3, UnitID: 103, RecordDate: ISODate('2026-05-01T00:00:00Z'), ProductType: 'LPG', CurrentStock_Bbls: 198275.52, MaxCapacity_Bbls: 315000.00},
-  {_id: 4, UnitID: 104, RecordDate: ISODate('2026-05-01T00:00:00Z'), ProductType: 'Natural Gas', CurrentStock_Bbls: 290141.22, MaxCapacity_Bbls: 420000.00},
-  {_id: 5, UnitID: 105, RecordDate: ISODate('2026-05-01T00:00:00Z'), ProductType: 'Crude Oil', CurrentStock_Bbls: 101264.44, MaxCapacity_Bbls: 175000.00},
+// Weekly inventory records (full dataset)
+ db.weekly_inventory_records.insertMany([
+  {_id: 1, unit_id: 101, record_date: ISODate('2026-05-01T00:00:00Z'), product_type: 'Crude Oil', current_stock_bbls: 46399.71, max_capacity_bbls: 70000.00},
+  {_id: 2, unit_id: 102, record_date: ISODate('2026-05-01T00:00:00Z'), product_type: 'Natural Gas', current_stock_bbls: 23419.82, max_capacity_bbls: 35000.00},
+  {_id: 3, unit_id: 103, record_date: ISODate('2026-05-01T00:00:00Z'), product_type: 'LPG', current_stock_bbls: 198275.52, max_capacity_bbls: 315000.00},
+  {_id: 4, unit_id: 104, record_date: ISODate('2026-05-01T00:00:00Z'), product_type: 'Natural Gas', current_stock_bbls: 290141.22, max_capacity_bbls: 420000.00},
+  {_id: 5, unit_id: 105, record_date: ISODate('2026-05-01T00:00:00Z'), product_type: 'Crude Oil', current_stock_bbls: 101264.44, max_capacity_bbls: 175000.00},
   {_id: 6, UnitID: 106, RecordDate: ISODate('2026-05-01T00:00:00Z'), ProductType: 'Crude Oil', CurrentStock_Bbls: 38241.65, MaxCapacity_Bbls: 560000.00},
   {_id: 7, UnitID: 107, RecordDate: ISODate('2026-05-01T00:00:00Z'), ProductType: 'Crude Oil', CurrentStock_Bbls: 53322.09, MaxCapacity_Bbls: 105000.00},
   {_id: 8, UnitID: 101, RecordDate: ISODate('2026-05-08T00:00:00Z'), ProductType: 'Crude Oil', CurrentStock_Bbls: 43764.12, MaxCapacity_Bbls: 70000.00},
