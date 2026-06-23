@@ -64,16 +64,17 @@ async def _run_ingestion(profile_id, profile, schemas, tables):
     async with AsyncSessionLocal() as db:
         # Upsert SchemaMetadata rows
         for key, meta in schema_data.items():
-            existing = await db.execute(
+            existing = await db.execute( # checks if current metadata already exists for this db profile.
                 select(SchemaMetadata).where(
                     SchemaMetadata.profile_id == profile_id,
                     SchemaMetadata.table_name == meta["table"],
                 )
             )
-            sm = existing.scalar_one_or_none()
-            if not sm:
+            sm = existing.scalar_one_or_none() # check whether db.execute() returned an existing metadata record.
+            if not sm: # if no existing metadata, create a new one.
                 sm = SchemaMetadata(profile_id=profile_id, table_name=meta["table"])
                 db.add(sm)
+            # update metadata fields (both for new and existing records)
             sm.schema_name = meta.get("schema")
             sm.column_definitions = {c["name"]: c for c in meta.get("columns", [])}
             sm.relationships = {"primary_keys": meta.get("primary_keys", []),

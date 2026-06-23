@@ -3,6 +3,7 @@ Query API — the primary endpoint consumed by external applications.
 POST /api/query  (Bearer: API token)
 Also provides query history, CSV/Excel export, and direct SQL preview.
 """
+import logging
 import uuid
 from typing import Optional
 
@@ -66,7 +67,8 @@ async def execute_query(
         )
         for sm in schema_rows.scalars().all():
             schema_ctx[sm.table_name] = sm.column_definitions or {}
-    except Exception:
+    except Exception as e:
+        logging.info(f"Failed to load schema context for profile {profile.id}: {str(e)}")
         pass  # schema context is best-effort
 
     # ── Generate SQL via Vanna AI ─────────────────────────────────────────────

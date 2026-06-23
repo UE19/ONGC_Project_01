@@ -15,8 +15,10 @@ class SchemaIngestionService:
                tables: Optional[List[str]] = None) -> Dict:
         """
         Discover schema structure from the target database.
-        Returns: {tables: {table_name: {columns: [...], relationships: [...]}}}
+        Returns: {`key`: {schema, table, columns: [...], primary_keys: [...], foreign_keys: [...]}}
+        key = <table_schema>.<table_name>
         """
+
         db_type = profile.db_type
 
         if db_type == DatabaseType.POSTGRESQL:

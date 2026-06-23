@@ -62,6 +62,7 @@ docker compose up -d --build
 | worker | python:3.11 | — | Celery async worker |
 | postgres | postgres:15 | 5432 | Platform metadata database |
 | redis | redis:7 | 6379 | Cache, rate limits, task queue |
+|ollama | ollama:latest | 11434 | LLM for SQL Generation |
 
 ---
 
@@ -76,11 +77,14 @@ docker compose up -d --build
 | `DATABASE_URL` | Async PostgreSQL connection URL | Yes |
 | `REDIS_URL` | Redis connection URL | Yes |
 | `OPENAI_API_KEY` | OpenAI API key for Vanna | Yes |
+|`OLLAMA_BASE_URL` | OpenAI compatible URL | Yes|
 | `OLLAMA_MODEL` | OpenAI model name (default: gpt-4o-mini) | No |
 | `POSTGRES_USER` | PostgreSQL admin username | Yes |
 | `POSTGRES_PASSWORD` | PostgreSQL admin password | Yes |
 | `POSTGRES_DB` | PostgreSQL database name | Yes |
 | `REDIS_PASSWORD` | Redis auth password | Yes |
+|`TRUST_X_FORWARDED` | trust X-Forwarded-For header for logging purposes | No |
+|`TRUSTED_PROXIES` | comma-divided list of ip address to trust the X-Forwarded-For from | No |
 
 ---
 
