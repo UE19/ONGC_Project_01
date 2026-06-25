@@ -37,9 +37,7 @@ function StatCard({ icon: Icon, label, value, sub, accentColor = "#CC0000" }) {
       onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 8px 32px rgba(0,0,0,0.25)"; }}
       onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "var(--shadow-card)"; }}
     >
-      {/* Subtle top accent line */}
       <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: `linear-gradient(90deg, ${accentColor}, transparent)`, borderRadius: "14px 14px 0 0" }} />
-
       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 12 }}>
         <span style={{ fontSize: 12, color: "var(--text3)", fontWeight: 500 }}>{label}</span>
         <div style={{
@@ -234,7 +232,7 @@ class Dashboard extends React.Component {
             <StatCard icon={Key}           label="Active Tokens"       value={stats.active_tokens ?? 0}          sub={`${stats.total_tokens ?? 0} total`}    accentColor="#f59e0b" />
             <StatCard icon={CheckCircle}   label="Success Rate"        value={`${stats.success_rate ?? 0}%`}                                                  accentColor="#22c55e" />
             <StatCard icon={AlertTriangle} label="Failed Queries"      value={stats.failed_queries ?? 0}                                                       accentColor="#f43f5e" />
-            <StatCard icon={Clock}         label="Avg Response Time"        value={`${stats.avg_response_time_ms ?? 0}ms`} sub="last 30 days"                      accentColor="#CC0000" />
+            <StatCard icon={Clock}         label="Avg Response Time"   value={`${stats.avg_response_time_ms ?? 0}ms`} sub="last 30 days"                      accentColor="#CC0000" />
             <StatCard icon={TrendingUp}    label="Total Queries"       value={stats.total_queries ?? 0}          sub="all time"                               accentColor="#CC0000" />
           </div>
 
