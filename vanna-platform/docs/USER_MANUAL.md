@@ -67,7 +67,7 @@ After running a query, use the **CSV** or **Excel** buttons to download results.
 
 ## Business Glossary
 In Schema Manager, add custom terms to improve AI accuracy:
-- **Term**: "gatepass" 
+- **Term**: "gatepass"
 - **Definition**: "An authorization document for entry/exit"
 - **Maps to Table**: "gatepasses"
 
@@ -80,3 +80,9 @@ This teaches the AI your company-specific terminology.
 - Use column/table names when known: "Count rows in employees table"
 - Check "Include SQL explanation" to understand what SQL was generated
 - Review the generated SQL before relying on results
+
+
+## Extra
+- A Chatbot Widget can be added by adding this code snippet
+
+    `<script src="/scripts/chatbot-widget.js" async></script>`
