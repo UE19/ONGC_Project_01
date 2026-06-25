@@ -20,7 +20,7 @@ class VannaServiceClient:
         profile_id: str,
         db_type: str,
         question: str,
-        schema_context: Optional[dict] = None,
+        schema_context: dict,
     ) -> dict:
         """
         Returns the generated SQL Query, its explanation and confidence.
@@ -35,7 +35,7 @@ class VannaServiceClient:
                     "profile_id": profile_id,
                     "db_type": db_type,
                     "question": question,
-                    "schema_context": schema_context or {},
+                    "schema_context": schema_context,
                 },
             )
             resp.raise_for_status()

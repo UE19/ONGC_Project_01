@@ -29,6 +29,9 @@ from services.query_validator import sanitize_natural_language, validate_sql
 from services.vanna_service import vanna_client
 from core.http import get_client_ip
 
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 router = APIRouter(prefix="/query", tags=["Query Engine"])
 
 
@@ -66,10 +69,15 @@ async def execute_query(
             select(SchemaMetadata).where(SchemaMetadata.profile_id == profile.id)
         )
         for sm in schema_rows.scalars().all():
-            schema_ctx[sm.table_name] = sm.column_definitions or {}
+            schema_ctx[sm.table_name] = {"columns": sm.column_definitions or {}}
     except Exception as e:
-        logging.info(f"Failed to load schema context for profile {profile.id}: {str(e)}")
+        logger.info(f"Failed to load schema context for profile {profile.id}: {str(e)}")
         pass  # schema context is best-effort
+
+    if schema_ctx == {}:
+        logger.info(f"No schema context found for profile {profile.id}. SQL generation may be less accurate.")
+
+    logger.debug(f"Executing query for profile {profile.id} with question: {question} with schema context: {schema_ctx}")
 
     # ── Generate SQL via Vanna AI ─────────────────────────────────────────────
     try:
