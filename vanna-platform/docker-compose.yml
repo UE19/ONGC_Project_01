@@ -146,9 +146,9 @@ services:
     networks:
       - vanna_net
     restart: unless-stopped
-    
+
   ollama:
-    image: ollama/ollama:latest
+    image: ollama/ollama:0.30.0
     container_name: vanna_ollama
     expose:
       - "11434"
