@@ -9,6 +9,7 @@ from fastapi import Depends, HTTPException, Request, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 
 from core.database import get_db
 from core.security import decode_token, hash_api_token
@@ -64,7 +65,7 @@ async def get_api_token(
 
     token_hash = hash_api_token(credentials.credentials)
     result = await db.execute(
-        select(APIToken).where(APIToken.token_hash == token_hash)
+        select(APIToken).where(APIToken.token_hash == token_hash).options(selectinload(APIToken.profile))
     )
     token: Optional[APIToken] = result.scalar_one_or_none()
 

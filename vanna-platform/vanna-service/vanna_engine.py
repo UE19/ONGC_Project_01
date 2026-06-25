@@ -13,6 +13,9 @@ from typing import Any, Dict, List, Optional
 
 from openai import OpenAI
 
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 # ── Ollama client (OpenAI-compatible, no API key needed) ──────────────────────
 OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://ollama:11434/v1")
 OPENAPI_API_KEY = os.getenv("OPENAI_API_KEY", "")
@@ -36,7 +39,7 @@ class VannaEngine:
     # ── SQL Generation ────────────────────────────────────────────────────────
 
     def generate_sql(self, profile_id: str, db_type: str, question: str,
-                     schema_context: Optional[Dict[str, Any]] = None) -> Optional[str]:
+                     schema_context: Optional[Dict[str, Any]]) -> Optional[str]:
         """
         Generate SQL from a natural language question using Ollama.
         Always uses direct Ollama call with DDL schema context.
@@ -49,14 +52,14 @@ class VannaEngine:
         if not sql:
             return None
 
-        logging.info(f"[generate_sql] after ollama: {sql[:300]}")
+        logger.debug(f"[generate_sql] after ollama: {sql[:300]}")
 
         # ── Post-process: fix wrong table names, then wrong column names ──────
         sql = self._fix_sql_tables(sql, schema_ctx)
-        logging.info(f"[generate_sql] after fix_tables: {sql[:300]}")
+        logger.debug(f"[generate_sql] after fix_tables: {sql[:300]}")
 
         sql = self._fix_sql_columns(sql, schema_ctx)
-        logging.info(f"[generate_sql] after fix_columns: {sql[:300]}")
+        logger.debug(f"[generate_sql] after fix_columns: {sql[:300]}")
 
         return sql
 
@@ -139,9 +142,9 @@ class VannaEngine:
                     result,
                     flags=re.IGNORECASE,
                 )
-                logging.info(f"[fix_tables] '{used_name}' → '{correct}'")
+                logger.debug(f"[fix_tables] '{used_name}' → '{correct}'")
             elif len(candidates) > 1:
-                logging.warning(f"[fix_tables] ambiguous '{used_name}' → {candidates}, skipping")
+                logger.warning(f"[fix_tables] ambiguous '{used_name}' → {candidates}, skipping")
 
         return result
 
@@ -164,7 +167,7 @@ class VannaEngine:
                 if name:
                     all_cols.add(name.lower())
 
-        logging.info(f"[fix_columns] all_cols sample: {sorted(list(all_cols))[:20]}")
+        logger.debug(f"[fix_columns] all_cols sample: {sorted(list(all_cols))[:20]}")
 
         result = sql
 
@@ -251,11 +254,12 @@ class VannaEngine:
         return result
 
     def _direct_ollama_sql(self, db_type: str, question: str,
-                           schema_context: Optional[Dict[str, Any]] = None) -> Optional[str]:
+                           schema_context: dict) -> Optional[str]:
         """Direct Ollama call — schema DDL first, then question."""
         schema_section = ""
         if schema_context:
             ddl = self._build_schema_ddl(schema_context)
+            logger.debug(f"[direct_ollama_sql] DDL {ddl}")
             if ddl:
                 schema_section = (
                     "-- Schema (use ONLY these exact table and column names):\n"
@@ -293,15 +297,15 @@ class VannaEngine:
                 max_tokens=512,
             )
             raw = resp.choices[0].message.content.strip()
-            logging.info(f"[ollama] raw response: {raw[:400]}")
+            logger.info(f"[ollama] raw response: {raw[:400]}")
             cleaned = self._clean_sql(raw)
-            logging.info(f"[ollama] cleaned SQL: {cleaned[:400]}")
+            logger.info(f"[ollama] cleaned SQL: {cleaned[:400]}")
             if not cleaned.upper().startswith(("SELECT", "WITH")):
-                logging.warning(f"[ollama] response not SQL: {raw[:100]}")
+                logger.warning(f"[ollama] response not SQL: {raw[:100]}")
                 return None
             return cleaned
         except Exception as e:
-            logging.error(f"[ollama] failed: {e}")
+            logger.error(f"[ollama] failed: {e}")
             return None
 
     def _clean_sql(self, sql: str) -> str:
@@ -329,7 +333,7 @@ class VannaEngine:
             )
             return resp.choices[0].message.content.strip()
         except Exception as e:
-            logging.error(f"[ollama explain] failed: {e}")
+            logger.error(f"[ollama explain] failed: {e}")
             return "SQL explanation unavailable."
 
     def summarize_results(self, question: str, sql: str, results: List[Dict],
@@ -361,7 +365,7 @@ class VannaEngine:
             )
             return resp.choices[0].message.content.strip()
         except Exception as e:
-            logging.error(f"[ollama summarize] failed: {e}")
+            logger.error(f"[ollama summarize] failed: {e}")
             return f"Query returned {row_count} row(s)."
 
     # ── Schema Training ───────────────────────────────────────────────────────
@@ -380,7 +384,7 @@ class VannaEngine:
             # Build CREATE TABLE DDL from schema metadata
             ddl = self._build_schema_ddl(schema_metadata)
             if not ddl:
-                logging.warning(f"[train] no DDL generated for profile {profile_id}")
+                logger.warning(f"[train] no DDL generated for profile {profile_id}")
                 return
 
             # Store training data per-profile in memory
@@ -391,12 +395,12 @@ class VannaEngine:
                 "timestamp": os.getenv("TIMESTAMP", ""),
             }
 
-            logging.info(
+            logger.info(
                 f"[train] profile '{profile_id}' trained on {len(schema_metadata)} tables, "
                 f"DDL length: {len(ddl)} chars"
             )
         except Exception as e:
-            logging.error(f"[train] failed for profile {profile_id}: {e}")
+            logger.error(f"[train] failed for profile {profile_id}: {e}")
             raise
 
     def get_training_data(self, profile_id: str) -> Optional[str]:
@@ -411,13 +415,13 @@ class VannaEngine:
         """
         try:
             if profile_id not in self._instances:
-                logging.info(f"[get_training_data] profile {profile_id} has no training data")
+                logger.info(f"[get_training_data] profile {profile_id} has no training data")
                 return ""
 
             training = self._instances[profile_id]
             ddl = training.get("ddl", "")
-            logging.info(f"[get_training_data] retrieved {len(ddl)} chars for profile {profile_id}")
+            logger.info(f"[get_training_data] retrieved {len(ddl)} chars for profile {profile_id}")
             return ddl
         except Exception as e:
-            logging.error(f"[get_training_data] failed for profile {profile_id}: {e}")
+            logger.error(f"[get_training_data] failed for profile {profile_id}: {e}")
             return ""
