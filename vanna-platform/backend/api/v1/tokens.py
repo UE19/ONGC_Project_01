@@ -42,6 +42,12 @@ async def create_token(
     # Verify the profile belongs to the user (or admin)
     result = await db.execute(select(ConnectionProfile).where(ConnectionProfile.id == body.profile_id))
     profile = result.scalar_one_or_none()
+
+    result_name = await db.execute(select(APIToken).where(APIToken.name == body.name, APIToken.owner_id == current_user.id))
+    existing_token = result_name.scalar()
+    if existing_token:
+        raise HTTPException(status_code=400, detail="Token name already exists for this user")
+
     if not profile:
         raise HTTPException(status_code=404, detail="Connection profile not found")
     if current_user.role not in (UserRole.SUPER_ADMIN, UserRole.ADMIN) and profile.owner_id != current_user.id:
