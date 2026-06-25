@@ -148,7 +148,7 @@ services:
     restart: unless-stopped
 
   ollama:
-    image: ollama/ollama:0.30.0
+    image: ollama/ollama:0.30.10
     container_name: vanna_ollama
     expose:
       - "11434"
