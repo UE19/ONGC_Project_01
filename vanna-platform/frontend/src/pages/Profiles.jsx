@@ -4,7 +4,7 @@ import { profilesAPI } from "../services/api";
 import toast from "react-hot-toast";
 import {
   Plus, Trash2, Edit, RefreshCw, CheckCircle, XCircle,
-  Database, Lock, Server, X, AlertTriangle, Wifi, WifiOff,
+  Database, Lock, Server, X, AlertTriangle, Wifi, WifiOff, Copy, Check,
 } from "lucide-react";
 
 const DB_TYPES = ["postgresql", "mysql", "mariadb", "mssql", "oracle", "mongodb"];
@@ -248,6 +248,15 @@ function ProfileCard({ profile, onTest, onEdit, onDelete, testing }) {
   const color = DB_COLORS[profile.db_type] || "#CC0000";
   const icon = DB_ICONS[profile.db_type] || "🗄️";
   const isTestingThis = testing === profile.id;
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyId = () => {
+    navigator.clipboard.writeText(profile.id).then(() => {
+      setCopied(true);
+      toast.success("Profile ID copied!");
+      setTimeout(() => setCopied(false), 2000);
+    }).catch(() => toast.error("Failed to copy ID"));
+  };
 
   return (
     <div
@@ -340,6 +349,14 @@ function ProfileCard({ profile, onTest, onEdit, onDelete, testing }) {
               ? <RefreshCw size={15} style={{ animation: "spin 0.8s linear infinite" }} />
               : <Wifi size={15} />
             }
+          </button>
+          <button
+            onClick={handleCopyId}
+            className="ongc-btn-ghost"
+            title={`Copy Profile ID: ${profile.id}`}
+            style={copied ? { color: "#22c55e" } : {}}
+          >
+            {copied ? <Check size={15} /> : <Copy size={15} />}
           </button>
           <button onClick={() => onEdit(profile)} className="ongc-btn-ghost" title="Edit profile">
             <Edit size={15} />

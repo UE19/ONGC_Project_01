@@ -14,6 +14,7 @@ import QueryConsole from "./pages/QueryConsole";
 import AuditLogs from "./pages/AuditLogs";
 import Users from "./pages/Users";
 import SchemaManager from "./pages/SchemaManager";
+import ChatApp from "./pages/ChatApp";
 
 // Top-level error boundary
 class AppErrorBoundary extends React.Component {
@@ -81,6 +82,7 @@ export default function App() {
             <Routes>
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/chat" element={<ChatApp />} />
               <Route
                 path="/"
                 element={
