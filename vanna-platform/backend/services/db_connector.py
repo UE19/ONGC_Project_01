@@ -3,32 +3,118 @@ Multi-database connector service.
 Supports: PostgreSQL, MySQL/MariaDB, MSSQL, Oracle, MongoDB (experimental).
 All connections are read-only in Phase-1.
 """
+
 import time
 from typing import Any, Dict, List, Optional, Tuple
 
-from models.connection_profile import DatabaseType, ConnectionProfile
+from models.connection_profile import (
+    DatabaseType,
+    ConnectionProfile,
+    DatabaseTypeURLPrefix,
+)
 from core.security import decrypt_value
+from sqlalchemy.engine import URL
 
 
 class DBConnector:
     """Executes SQL on the target database identified by a connection profile."""
+
+    def db_url_creator(
+        self,
+        drivername: str,
+        username: str,
+        password: str,
+        host: str,
+        port: int,
+        dbname: str,
+        sslmode: str = "disable",
+    ):
+        """Creates the db url"""
+        if sslmode not in ["disable", "require", "verify-ca", "verify-full"]:
+            raise Exception("SSL mode not valid")
+        if (
+            sslmode
+            and sslmode != "disable"
+            and drivername != DatabaseTypeURLPrefix.MYSQL
+        ):
+            url = URL.create(
+                drivername=drivername,  # dialect + driver
+                username=username,
+                password=password,
+                host=host,
+                port=port,
+                database=dbname,
+                query={"sslmode": sslmode},
+            )
+        else:
+            url = URL.create(
+                drivername=drivername,  # dialect + driver
+                username=username,
+                password=password,
+                host=host,
+                port=port,
+                database=dbname,
+            )
+        # DBConnector.db_url_creator() takes from 6 to 7 positional arguments but 8 were given
+
+        return url
 
     def get_connection_string(self, profile: ConnectionProfile) -> str:
         password = decrypt_value(profile.encrypted_password)
         db_type = profile.db_type
 
         if db_type == DatabaseType.POSTGRESQL:
-            ssl = f"?sslmode={profile.ssl_mode.value}" if profile.ssl_mode.value != "disable" else ""
-            return f"postgresql+psycopg2://{profile.username}:{password}@{profile.host}:{profile.port}/{profile.database_name}{ssl}"
-
+            url = self.db_url_creator(
+                DatabaseTypeURLPrefix.POSTGRESQL,
+                profile.username,
+                password,
+                profile.host,
+                profile.port,
+                profile.database_name,
+                profile.ssl_mode.value,
+            )
+            return url.render_as_string(hide_password=False)
         elif db_type in (DatabaseType.MYSQL, DatabaseType.MARIADB):
-            return f"mysql+pymysql://{profile.username}:{password}@{profile.host}:{profile.port}/{profile.database_name}"
-
+            url = self.db_url_creator(
+                DatabaseTypeURLPrefix.MYSQL,
+                profile.username,
+                password,
+                profile.host,
+                profile.port,
+                profile.database_name,
+            )
+            return url.render_as_string(hide_password=False)
         elif db_type == DatabaseType.MSSQL:
-            return f"mssql+pymssql://{profile.username}:{password}@{profile.host}:{profile.port}/{profile.database_name}"
-
+            url = self.db_url_creator(
+                DatabaseTypeURLPrefix.MSSQL,
+                profile.username,
+                password,
+                profile.host,
+                profile.port,
+                profile.database_name,
+            )
+            return url.render_as_string(hide_password=False)
         elif db_type == DatabaseType.ORACLE:
-            return f"oracle+oracledb://{profile.username}:{password}@{profile.host}:{profile.port}/?service_name={profile.database_name}"
+            url = self.db_url_creator(
+                DatabaseTypeURLPrefix.ORACLE,
+                profile.username,
+                password,
+                profile.host,
+                profile.port,
+                profile.database_name,
+            )
+            return url.render_as_string(hide_password=False)
+        elif db_type == DatabaseType.MONGODB:
+            url = self.db_url_creator(
+                DatabaseTypeURLPrefix.MONGODB,
+                profile.username,
+                password,
+                profile.host,
+                profile.port,
+                profile.database_name,
+                profile.ssl_mode.value,
+            )
+            return url.render_as_string(hide_password=False)
 
         raise ValueError(f"Unsupported database type: {db_type}")
 
@@ -64,7 +150,9 @@ class DBConnector:
 
         with engine.connect() as conn:
             # Count total rows
-            count_sql = f"SELECT COUNT(*) FROM ({sql.rstrip().rstrip(';')}) AS _count_query"
+            count_sql = (
+                f"SELECT COUNT(*) FROM ({sql.rstrip().rstrip(';')}) AS _count_query"
+            )
             try:
                 total_rows = conn.execute(text(count_sql)).scalar()
             except Exception:
@@ -93,12 +181,15 @@ class DBConnector:
             "execution_time_ms": round(elapsed, 2),
         }
 
-    def test_connection(self, profile: ConnectionProfile) -> Tuple[bool, str, Optional[float]]:
+    def test_connection(
+        self, profile: ConnectionProfile
+    ) -> Tuple[bool, str, Optional[float]]:
         """Test that the connection profile is reachable."""
         if profile.db_type == DatabaseType.MONGODB:
             return self._test_mongo(profile)
 
         from sqlalchemy import create_engine, text
+
         try:
             start = time.perf_counter()
             engine = create_engine(
@@ -115,18 +206,38 @@ class DBConnector:
 
     def _build_connect_args(self, profile: ConnectionProfile) -> dict:
         args = {}
-        if profile.ssl_mode.value != "disable":
-            if profile.db_type == DatabaseType.POSTGRESQL:
-                args["sslmode"] = profile.ssl_mode.value
-                if profile.ssl_ca_cert:
-                    args["sslrootcert"] = profile.ssl_ca_cert
+        if profile.ssl_mode.value == "disable":
+            return args
+
+        if profile.db_type == DatabaseType.POSTGRESQL:
+            args["sslmode"] = profile.ssl_mode.value
+            if profile.ssl_ca_cert:
+                args["sslrootcert"] = profile.ssl_ca_cert
+        elif profile.db_type in (DatabaseType.MYSQL, DatabaseType.MARIADB):
+            ssl_args = {}
+            if profile.ssl_ca_cert:
+                ssl_args["ca"] = profile.ssl_ca_cert
+            if profile.ssl_client_cert:
+                ssl_args["cert"] = profile.ssl_client_cert
+            if profile.ssl_client_key:
+                ssl_args["key"] = profile.ssl_client_key
+            if ssl_args or profile.ssl_mode.value != "disable":
+                args["ssl"] = ssl_args
+
         return args
 
-    def _apply_pagination(self, sql: str, db_type: DatabaseType, limit: int, offset: int) -> str:
+    def _apply_pagination(
+        self, sql: str, db_type: DatabaseType, limit: int, offset: int
+    ) -> str:
         """Wrap SQL with database-appropriate pagination."""
         # Strip trailing semicolon — breaks subquery wrapping
         sql = sql.rstrip().rstrip(";").rstrip()
-        if db_type in (DatabaseType.POSTGRESQL, DatabaseType.MYSQL, DatabaseType.MARIADB, DatabaseType.MONGODB):
+        if db_type in (
+            DatabaseType.POSTGRESQL,
+            DatabaseType.MYSQL,
+            DatabaseType.MARIADB,
+            DatabaseType.MONGODB,
+        ):
             return f"SELECT * FROM ({sql}) AS _paged LIMIT {limit} OFFSET {offset}"
         elif db_type == DatabaseType.MSSQL:
             return (
@@ -140,10 +251,13 @@ class DBConnector:
             )
         return sql
 
-    def _execute_mongo(self, profile: ConnectionProfile, pipeline_str: str, page: int, page_size: int) -> Dict:
+    def _execute_mongo(
+        self, profile: ConnectionProfile, pipeline_str: str, page: int, page_size: int
+    ) -> Dict:
         """MongoDB execution — handles both JSON pipelines and AI-generated SQL."""
         import json, time as _time
         from pymongo import MongoClient
+
         password = decrypt_value(profile.encrypted_password)
         uri = f"mongodb://{profile.username}:{password}@{profile.host}:{profile.port}/{profile.database_name}"
         client = MongoClient(uri, serverSelectionTimeoutMS=5000)
@@ -158,7 +272,7 @@ class DBConnector:
                 collection = db[collection_name]
                 offset = (page - 1) * page_size
                 docs = list(collection.aggregate(pipeline))
-                docs = docs[offset: offset + page_size]
+                docs = docs[offset : offset + page_size]
             except (json.JSONDecodeError, ValueError, KeyError):
                 # Fallback: AI gave us SQL — parse it into a pymongo find()
                 collection_name, query_filter = _sql_to_mongo(pipeline_str)
@@ -182,8 +296,11 @@ class DBConnector:
         finally:
             client.close()
 
-    def _test_mongo(self, profile: ConnectionProfile) -> Tuple[bool, str, Optional[float]]:
+    def _test_mongo(
+        self, profile: ConnectionProfile
+    ) -> Tuple[bool, str, Optional[float]]:
         from pymongo import MongoClient
+
         password = decrypt_value(profile.encrypted_password)
         uri = f"mongodb://{profile.username}:{password}@{profile.host}:{profile.port}/{profile.database_name}"
         try:
@@ -217,6 +334,7 @@ def _serialize_rows(data: list) -> list:
 def _mongo_serialize(doc: dict) -> dict:
     from bson import ObjectId
     from datetime import datetime
+
     result = {}
     for k, v in doc.items():
         if isinstance(v, ObjectId):
@@ -234,22 +352,24 @@ def _sql_to_mongo(sql: str):
     for pymongo find(). Handles simple SELECT ... FROM ... WHERE ... queries.
     """
     import re
+
     sql = sql.strip().rstrip(";")
 
     # Extract collection name from FROM clause
-    from_match = re.search(r'\bFROM\s+`?\"?(\w+)`?\"?', sql, re.IGNORECASE)
+    from_match = re.search(r"\bFROM\s+`?\"?(\w+)`?\"?", sql, re.IGNORECASE)
     collection_name = from_match.group(1) if from_match else ""
 
     # Extract WHERE clause
     where_match = re.search(
-        r'\bWHERE\s+(.+?)(?:\s+ORDER\s+BY|\s+GROUP\s+BY|\s+LIMIT|\s+OFFSET|$)',
-        sql, re.IGNORECASE | re.DOTALL
+        r"\bWHERE\s+(.+?)(?:\s+ORDER\s+BY|\s+GROUP\s+BY|\s+LIMIT|\s+OFFSET|$)",
+        sql,
+        re.IGNORECASE | re.DOTALL,
     )
     query_filter = {}
 
     if where_match:
         where_clause = where_match.group(1).strip()
-        conditions = re.split(r'\s+AND\s+', where_clause, flags=re.IGNORECASE)
+        conditions = re.split(r"\s+AND\s+", where_clause, flags=re.IGNORECASE)
         for cond in conditions:
             cond = cond.strip()
             # field = 'string value'
@@ -258,18 +378,18 @@ def _sql_to_mongo(sql: str):
                 query_filter[m.group(1)] = m.group(2)
                 continue
             # field = TRUE/FALSE
-            m = re.match(r'(\w+)\s*=\s*(true|false)', cond, re.IGNORECASE)
+            m = re.match(r"(\w+)\s*=\s*(true|false)", cond, re.IGNORECASE)
             if m:
                 query_filter[m.group(1)] = m.group(2).lower() == "true"
                 continue
             # field = number
-            m = re.match(r'(\w+)\s*=\s*(\d+(?:\.\d+)?)', cond)
+            m = re.match(r"(\w+)\s*=\s*(\d+(?:\.\d+)?)", cond)
             if m:
                 val = m.group(2)
                 query_filter[m.group(1)] = float(val) if "." in val else int(val)
                 continue
             # field IS NULL / IS NOT NULL
-            m = re.match(r'(\w+)\s+IS\s+(NOT\s+)?NULL', cond, re.IGNORECASE)
+            m = re.match(r"(\w+)\s+IS\s+(NOT\s+)?NULL", cond, re.IGNORECASE)
             if m:
                 if m.group(2):
                     query_filter[m.group(1)] = {"$ne": None}
