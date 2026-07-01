@@ -22,6 +22,13 @@ class DatabaseType(str, enum.Enum):
     ORACLE = "oracle"
     MONGODB = "mongodb"
 
+class DatabaseTypeURLPrefix():
+    POSTGRESQL = "postgresql+psycopg2"
+    MYSQL = "mysql+pymysql"
+    MSSQL = "mssql+pymssql"
+    ORACLE = "oracle+oracledb"
+    MONGODB = "mongodb"
+
 
 class SSLMode(str, enum.Enum):
     DISABLE = "disable"
